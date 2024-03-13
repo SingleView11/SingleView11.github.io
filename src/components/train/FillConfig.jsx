@@ -1,30 +1,85 @@
-import React, { useState } from "react"
+import React, { useContext, useState } from "react"
 import Button from "antd-button-color"
 import { Col, Divider, Row, Slider, InputNumber } from 'antd';
 import { Typography } from "antd";
 import { TitleCen } from "../../utils/titleFunc";
 import { upFirst } from "../../utils/levelTypes";
+import { ConfigContext } from "../globalStates/ConfigContext";
 
 const { Text, Title } = Typography
 
-const ConfigComponent = ({ config, setConfig, }) => {
-    // console.log(config)
+const SlideBarProp = ({ config, setConfig, propName, propTitle, sliderStep = 1 }) => {
+    let cfg = {
+        ...config
+    }
 
-    /*
-        config type: 
-        appearing sounds
-        bpm
-        play form
-        cadence/prefix 
+    const propChoose = (value) => {
+        cfg[propName] = {
+            ...cfg[propName],
+            cur: value
+        }
+        setConfig(cfg)
 
-        action after wrong
-        action after right
+    }
+    return (
+        <>
+            <TitleCen text={propTitle}></TitleCen>
+            <Row justify="center">
+                <Col span={12}>
+                    <Slider
+                        min={config[propName].min}
+                        max={config[propName].max}
+                        value={config[propName].cur}
+                        onChange={propChoose}
+                        step={sliderStep}
 
-        wait to play next time 
+                    />
+                </Col>
+                <Col span={2}>
+                    <InputNumber
+                        min={config[propName].min}
+                        max={config[propName].max}
+                        style={{ margin: '0 16px', width: 50 }}
+                        value={config[propName].cur}
+                        onChange={propChoose}
+                    />
+                </Col>
+            </Row>
+        </>
+    )
+}
 
-    */
+const ButtonSelecOne = ({ config, setConfig, propName, propTitle }) => {
+    let cfg = {
+        ...config
+    }
 
+    const handleButtonSelection = (e) => {
+        cfg[propName].cur = e.currentTarget.name
+        setConfig(cfg)
+    }
 
+    return (
+        <>
+            <TitleCen text={propTitle}></TitleCen>
+            <Row justify="center">
+                {config[propName].options.map((option, index) => {
+                    return (
+                        <Col key={`${option} with ${index} in ${config.type}`}>
+                            <Button style={{ margin: 10, }} name={index} onClick={handleButtonSelection}
+                                type={index == config[propName].cur ? "primary" : "lightdark"}
+                            >{upFirst(option)}</Button>
+                        </Col>
+                    )
+                })}
+
+            </Row>
+        </>
+    )
+}
+
+const ConfigComponent = () => {
+    const { config, setConfig, } = useContext(ConfigContext)
     const soundChoose = (e) => {
         setConfig({
             ...config,
@@ -38,27 +93,6 @@ const ConfigComponent = ({ config, setConfig, }) => {
         })
     }
 
-    const speedChoose = (value) => {
-        setConfig({
-            ...config,
-            speed: {
-                ...config.speed,
-                cur: value
-            }
-        })
-    }
-
-    const waitIntervalChoose = (value) => {
-            setConfig({
-            ...config,
-            waitInterval: {
-                ...config.waitInterval,
-                cur: value
-            }
-        })
-    }
-
-
 
     return (
         <>
@@ -70,59 +104,21 @@ const ConfigComponent = ({ config, setConfig, }) => {
                 {config["sounds"].map((soundInfo, index) => {
                     return (
                         <Col key={soundInfo["key"]}>
-                            <Button style={{ margin: 10, width: 100, }} id={soundInfo.key} key={soundInfo["key"]} name={soundInfo["key"]} onClick={soundChoose} type={soundInfo["playable"] ? "primary" : "lightdark"} >{soundInfo["name"]}</Button>
+                            <Button style={{ margin: 10, width: 200, }} id={soundInfo.key} key={soundInfo["key"]} name={soundInfo["key"]} onClick={soundChoose} type={soundInfo["playable"] ? "primary" : "lightdark"} >{soundInfo["name"]}</Button>
                         </Col>
                     )
                 })}
             </Row>
 
-            <TitleCen text="Speed (BPM)"></TitleCen>
-            <Row justify="center">
-                <Col span={12}>
-                    <Slider
-                        min={config.speed.min}
-                        max={config.speed.max}
-                        onChange={speedChoose}
+            <SlideBarProp config={config} setConfig={setConfig} propName={"speed"} propTitle={"Speed"} ></SlideBarProp>
+            <SlideBarProp config={config} setConfig={setConfig} propName={"scaleRange"} propTitle={"Scale Range"} ></SlideBarProp>
+            <SlideBarProp config={config} setConfig={setConfig} propName={"waitInterval"} propTitle={"Interval Time"} sliderStep={0.01} ></SlideBarProp>
+            <ButtonSelecOne config={config} setConfig={setConfig} propName={"prelude"} propTitle={"Prelude"}></ButtonSelecOne>
 
-                        value={config.speed.cur}
-                    />
-                </Col>
-                <Col span={2}>
-                    <InputNumber
-                        min={config.speed.min}
-                        max={config.speed.max}
-                        style={{ margin: '0 16px', width: 50 }}
-                        value={config.speed.cur}
-                        onChange={speedChoose}
-                    />
-                </Col>
-            </Row>
-
-            <TitleCen text="Play Interval Time"></TitleCen>
-            <Row justify="center">
-                <Col span={12}>
-                    <Slider
-                        min={config.waitInterval.min}
-                        max={config.waitInterval.max}
-                        onChange={waitIntervalChoose}
-                        step={0.01}
-                        value={config.waitInterval.cur}
-                    />
-                </Col>
-                <Col span={2}>
-                    <InputNumber
-                        min={config.waitInterval.min}
-                        max={config.waitInterval.max}
-                        style={{ margin: '0 16px', width: 50 }}
-                        value={config.waitInterval.cur}
-                        onChange={waitIntervalChoose}
-
-                    />
-                </Col>
-            </Row>
-
-
-
+            <ButtonSelecOne config={config} setConfig={setConfig} propName={"playForm"} propTitle={"Mode"}></ButtonSelecOne>
+            <ButtonSelecOne config={config} setConfig={setConfig} propName={"wrongThen"} propTitle={"Action after wrong"}></ButtonSelecOne>
+            {config["rightThen"] && <ButtonSelecOne config={config} setConfig={setConfig} propName={"rightThen"} propTitle={"Action after correct"}></ButtonSelecOne>}
+            {config[""]}
         </>
     )
 }

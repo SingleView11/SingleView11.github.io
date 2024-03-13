@@ -1,9 +1,12 @@
-const TrainMelody = ({ settings }) => {
+import { ConfigComponent } from "./FillConfig"
+
+
+
+export const TrainMelody = () => {
+
     return (
         <>
-            Melody!
+            <ConfigComponent></ConfigComponent>
         </>
     )
 }
-
-export default TrainMelody

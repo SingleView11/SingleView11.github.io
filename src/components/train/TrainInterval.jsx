@@ -1,24 +1,12 @@
-import React, { useState } from "react"
 import { ConfigComponent } from "./FillConfig"
-import { Space, Typography } from "antd"
-import { generateConfig } from "../../utils/initConfig"
-import { intervalConfig } from "../../utils/initConfig"
-
-
-const { Text, Title } = Typography
 
 
 
-const TrainInterval = () => {
-    const [config, setConfig] = useState(intervalConfig)
-
+export const TrainInterval = () => {
 
     return (
         <>
-            
-            <ConfigComponent {...{ config, setConfig }} ></ConfigComponent>
+            <ConfigComponent></ConfigComponent>
         </>
     )
 }
-
-export default TrainInterval

@@ -1,9 +1,12 @@
-const TrainNote = ({ settings }) => {
+import { ConfigComponent } from "./FillConfig"
+
+
+
+export const TrainNote = () => {
+
     return (
         <>
-            <h1> Note Training </h1>
+            <ConfigComponent></ConfigComponent>
         </>
     )
 }
-
-export default TrainNote

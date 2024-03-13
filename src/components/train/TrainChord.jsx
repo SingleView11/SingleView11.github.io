@@ -1,9 +1,12 @@
-const TrainChord = ({ settings }) => {
+import { ConfigComponent } from "./FillConfig"
+
+
+
+export const TrainChord = () => {
+
     return (
         <>
-            <h1> Chord Training </h1>
+            <ConfigComponent></ConfigComponent>
         </>
     )
 }
-
-export default TrainChord

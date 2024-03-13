@@ -4,17 +4,25 @@ import { Space, Layout, Menu, theme, Typography } from 'antd';
 import Button from "antd-button-color";
 import TrainArea from './TrainArea';
 import { generateSubNavFrom } from '../../utils/levelTypes';
-
+import { useContext } from 'react';
+import { ConfigContext } from '../globalStates/ConfigContext';
+import { configMap } from '../../utils/initConfig';
+import { easyConfig, mediumConfig, hardConfig } from '../../utils/initConfig';
 
 const { Header, Content, Sider } = Layout;
 const { Text, Title } = Typography;
 
 
+
 const TrainSideBar = () => {
 
     const [collapsed, setCollapsed] = useState(true);
+    const { config, setConfig } = useContext(ConfigContext)
 
-    const items2 = generateSubNavFrom(() => { setCollapsed(true) });
+    const items2 = generateSubNavFrom((e, choice) => {
+        setCollapsed(true);
+        setConfig({ ...config, ...configMap.get(choice)})
+    });
 
 
     const {
@@ -70,9 +78,9 @@ const TrainSideBar = () => {
                             }}
                         >
                         </Button>
-                        <Button type='success' style={{ margin: 5 }} >Easy</Button>
-                        <Button type='primary' style={{ margin: 5 }}>Medium </Button>
-                        <Button type='info' style={{ margin: 5 }} >Hard </Button>
+                        <Button type='success' style={{ margin: 5 } } onClick={()=>{setConfig(easyConfig(config))}}  >Easy</Button>
+                        <Button type='primary' style={{ margin: 5 }} onClick={()=>{setConfig(mediumConfig(config))}}>Medium </Button>
+                        <Button type='info' style={{ margin: 5 }}onClick={()=>{setConfig(hardConfig(config))}} >Hard </Button>
                         {/* <Button type='text' >Master </Button> */}
                         {/* <Button block type="primary" disabled={true}  ghost style={{whiteSpace: "normal",height:'auto',marginBottom:'10px', }}>Wrap around text</Button> */}
 
@@ -114,7 +122,7 @@ const TrainSideBar = () => {
                             borderRadius: borderRadiusLG,
                         }}
                     >
-                    <TrainArea></TrainArea>
+                        <TrainArea></TrainArea>
 
                     </Content>
 
