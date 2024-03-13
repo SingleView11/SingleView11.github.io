@@ -43,6 +43,13 @@ export const generateConfig = (obj) => {
         cur: 3,
     }
 
+    // 0 for unlimited
+    const questionNumberInit = {
+        min: 0,
+        max: 100,
+        cur: 20,
+    }
+
 
     const soundsInit = soundNames.map((soundName, index) => {
         // 12 modes
@@ -58,6 +65,7 @@ export const generateConfig = (obj) => {
         sounds: soundsInit,
         speed: speedInit,
         waitInterval: waitIntervalInit,
+        questionNumber: questionNumberInit,
 
 
         wrongThen: wrongThenInit,

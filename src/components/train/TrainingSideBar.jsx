@@ -8,6 +8,8 @@ import { useContext } from 'react';
 import { ConfigContext } from '../globalStates/ConfigContext';
 import { configMap } from '../../utils/initConfig';
 import { easyConfig, mediumConfig, hardConfig } from '../../utils/initConfig';
+import { ConfigComponent } from './FillConfig';
+import { TrainResult } from './TrainResult';
 
 const { Header, Content, Sider } = Layout;
 const { Text, Title } = Typography;
@@ -17,17 +19,23 @@ const { Text, Title } = Typography;
 const TrainSideBar = () => {
 
     const [collapsed, setCollapsed] = useState(true);
-    const { config, setConfig } = useContext(ConfigContext)
+    const { config, setConfig, trainState, setTrainState } = useContext(ConfigContext)
 
     const items2 = generateSubNavFrom((e, choice) => {
         setCollapsed(true);
-        setConfig({ ...config, ...configMap.get(choice)})
+        setConfig({ ...config, ...configMap.get(choice) })
     });
 
+    const startTraining = () => {
+        setTrainState(1 - trainState)
+    }
 
     const {
         token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
+
+
+
     return (
         <Layout>
             <Layout>
@@ -58,7 +66,7 @@ const TrainSideBar = () => {
                     }}
                 >
 
-                    <Content
+                    {trainState == 0 &&  <Content
                         style={{
 
                             padding: 12,
@@ -78,15 +86,15 @@ const TrainSideBar = () => {
                             }}
                         >
                         </Button>
-                        <Button type='success' style={{ margin: 5 } } onClick={()=>{setConfig(easyConfig(config))}}  >Easy</Button>
-                        <Button type='primary' style={{ margin: 5 }} onClick={()=>{setConfig(mediumConfig(config))}}>Medium </Button>
-                        <Button type='info' style={{ margin: 5 }}onClick={()=>{setConfig(hardConfig(config))}} >Hard </Button>
+                        <Button type='success' style={{ margin: 5 }} onClick={() => { setConfig(easyConfig(config)) }}  >Easy</Button>
+                        <Button type='primary' style={{ margin: 5 }} onClick={() => { setConfig(mediumConfig(config)) }}>Medium </Button>
+                        <Button type='info' style={{ margin: 5 }} onClick={() => { setConfig(hardConfig(config)) }} >Hard </Button>
                         {/* <Button type='text' >Master </Button> */}
                         {/* <Button block type="primary" disabled={true}  ghost style={{whiteSpace: "normal",height:'auto',marginBottom:'10px', }}>Wrap around text</Button> */}
 
-                    </Content>
+                    </Content>}
 
-                    <Content
+                    {trainState == 0 &&  <Content
                         style={{
                             margin: 0,
                             marginTop: 20,
@@ -105,10 +113,12 @@ const TrainSideBar = () => {
                                 <Text  >Click the "START" button to go!</Text>
                             </Space>
                         </Space>
-                        <Button block type="primary" disabled={false} style={{ whiteSpace: "normal", height: 'auto', minHeight: 50, marginTop: 10, }}>START</Button>
+                        <Button block type="primary" disabled={false}
+                            style={{ whiteSpace: "normal", height: 'auto', minHeight: 50, marginTop: 10, }}
+                            onClick={startTraining}>START</Button>
 
 
-                    </Content>
+                    </Content>}
 
 
 
@@ -122,7 +132,11 @@ const TrainSideBar = () => {
                             borderRadius: borderRadiusLG,
                         }}
                     >
-                        <TrainArea></TrainArea>
+                        {trainState == 0 && <ConfigComponent></ConfigComponent>}
+
+                        {trainState == 1 && <TrainArea></TrainArea>}
+
+                        {trainState == 2 && <TrainResult></TrainResult>}
 
                     </Content>
 

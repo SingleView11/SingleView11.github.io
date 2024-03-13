@@ -42,6 +42,7 @@ const SlideBarProp = ({ config, setConfig, propName, propTitle, sliderStep = 1 }
                         style={{ margin: '0 16px', width: 50 }}
                         value={config[propName].cur}
                         onChange={propChoose}
+                        step={sliderStep}
                     />
                 </Col>
             </Row>
@@ -111,6 +112,7 @@ const ConfigComponent = () => {
             </Row>
 
             <SlideBarProp config={config} setConfig={setConfig} propName={"speed"} propTitle={"Speed"} ></SlideBarProp>
+            <SlideBarProp config={config} setConfig={setConfig} propName={"questionNumber"} propTitle={"Question number"} sliderStep={5} ></SlideBarProp>
             <SlideBarProp config={config} setConfig={setConfig} propName={"scaleRange"} propTitle={"Scale Range"} ></SlideBarProp>
             <SlideBarProp config={config} setConfig={setConfig} propName={"waitInterval"} propTitle={"Interval Time"} sliderStep={0.01} ></SlideBarProp>
             <ButtonSelecOne config={config} setConfig={setConfig} propName={"prelude"} propTitle={"Prelude"}></ButtonSelecOne>

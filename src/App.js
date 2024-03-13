@@ -21,9 +21,14 @@ import { initialConfig } from './utils/initConfig';
 
 const App = () => {
   const [config, setConfig] = useState(initialConfig)
+  const [trainState, setTrainState] = useState(0)
+
   return (
     <>
-      <ConfigContext.Provider value={{ config: config, setConfig: setConfig }}>
+      <ConfigContext.Provider value={{ 
+        config: config, setConfig: setConfig, 
+        trainState: trainState, setTrainState: setTrainState
+        }}>
         <HeaderComponent></HeaderComponent>
         <Routes>
           <Route path="/" element={<HomeComponent />} />

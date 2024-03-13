@@ -6,7 +6,6 @@ export const TrainMelody = () => {
 
     return (
         <>
-            <ConfigComponent></ConfigComponent>
         </>
     )
 }

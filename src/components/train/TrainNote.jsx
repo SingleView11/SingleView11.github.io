@@ -6,7 +6,6 @@ export const TrainNote = () => {
 
     return (
         <>
-            <ConfigComponent></ConfigComponent>
         </>
     )
 }
