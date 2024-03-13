@@ -1,24 +1,22 @@
-import React from 'react';
-import { LaptopOutlined, NotificationOutlined, UserOutlined } from '@ant-design/icons';
-import { Breadcrumb, Layout, Menu, theme } from 'antd';
+import React, { useState } from 'react';
+import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
+import { Space, Layout, Menu, theme, Typography } from 'antd';
+import Button from "antd-button-color";
 import TrainArea from './TrainArea';
+import { generateSubNavFrom } from '../../utils/levelTypes';
+
+
 const { Header, Content, Sider } = Layout;
-const items2 = [UserOutlined, LaptopOutlined, NotificationOutlined].map((icon, index) => {
-    const key = String(index + 1);
-    return {
-        key: `sub${key}`,
-        icon: React.createElement(icon),
-        label: `subnav ${key}`,
-        children: new Array(4).fill(null).map((_, j) => {
-            const subKey = index * 4 + j + 1;
-            return {
-                key: subKey,
-                label: `option${subKey}`,
-            };
-        }),
-    };
-});
+const { Text, Title } = Typography;
+
+
 const TrainSideBar = () => {
+
+    const [collapsed, setCollapsed] = useState(true);
+
+    const items2 = generateSubNavFrom(() => { setCollapsed(true) });
+
+
     const {
         token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
@@ -26,11 +24,15 @@ const TrainSideBar = () => {
         <Layout>
             <Layout>
                 <Sider
+                    trigger={null}
+                    collapsible collapsed={collapsed}
+                    collapsedWidth={0}
                     width={200}
                     style={{
                         background: colorBgContainer,
                     }}
                 >
+
                     <Menu
                         mode="inline"
                         defaultSelectedKeys={['1']}
@@ -47,6 +49,61 @@ const TrainSideBar = () => {
                         padding: '0 24px 24px',
                     }}
                 >
+
+                    <Content
+                        style={{
+
+                            padding: 12,
+                            marginTop: 20,
+                            background: colorBgContainer,
+                            borderRadius: borderRadiusLG,
+                        }}
+                    >
+                        <Button
+                            type="text"
+                            icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+                            onClick={() => setCollapsed(!collapsed)}
+                            style={{
+                                fontSize: '16px',
+                                width: 64,
+                                height: 64,
+                            }}
+                        >
+                        </Button>
+                        <Button type='success' style={{ margin: 5 }} >Easy</Button>
+                        <Button type='primary' style={{ margin: 5 }}>Medium </Button>
+                        <Button type='info' style={{ margin: 5 }} >Hard </Button>
+                        {/* <Button type='text' >Master </Button> */}
+                        {/* <Button block type="primary" disabled={true}  ghost style={{whiteSpace: "normal",height:'auto',marginBottom:'10px', }}>Wrap around text</Button> */}
+
+                    </Content>
+
+                    <Content
+                        style={{
+                            margin: 0,
+                            marginTop: 20,
+                            padding: 24,
+                            background: colorBgContainer,
+                            borderRadius: borderRadiusLG,
+                        }}
+                    >
+
+                        <Space direction="vertical">
+                            {/* <Title level={4}>sfafsdfafdasf</Title> */}
+                            <Space direction="vertical">
+                                <Text  >Click the icon <MenuUnfoldOutlined /> to choose the mode of training.</Text>
+                                <Text  >Click the difficulty button(Easy, Medium, Hard) to quickly select a difficulty. </Text>
+                                <Text  >You can also edit the config parameters separately to customize difficulty.</Text>
+                                <Text  >Click the "START" button to go!</Text>
+                            </Space>
+                        </Space>
+                        <Button block type="primary" disabled={false} style={{ whiteSpace: "normal", height: 'auto', minHeight: 50, marginTop: 10, }}>START</Button>
+
+
+                    </Content>
+
+
+
                     <Content
                         style={{
                             padding: 24,
@@ -57,8 +114,10 @@ const TrainSideBar = () => {
                             borderRadius: borderRadiusLG,
                         }}
                     >
-                        <TrainArea></TrainArea>
+                    <TrainArea></TrainArea>
+
                     </Content>
+
                 </Layout>
             </Layout>
         </Layout>

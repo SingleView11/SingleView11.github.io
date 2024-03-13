@@ -1,7 +1,7 @@
 // App.js
 import { Routes, Route } from 'react-router-dom';
 import AboutComponent from './components/layout/About';
-import IntroductionPage from "./components/layout/IntroductionPage"
+// import IntroductionPage from "./components/layout/IntroductionPage"
 import HeaderComponent from './components/layout/Header';
 import FooterComponent from './components/layout/Footer';
 import ErrorComponent from './components/layout/ErrorPage';
@@ -13,6 +13,8 @@ import TrainInterval from './components/train/TrainInterval';
 import TrainMelody from './components/train/TrainMelody';
 import TrainNote from './components/train/TrainNote';
 
+import 'antd-button-color/dist/css/style.css';
+
 const App = () => {
   return (
     <>
@@ -23,6 +25,25 @@ const App = () => {
         <Route path='/train' element={<TrainSideBar></TrainSideBar>}>
           <Route path="chord" element={<TrainChord></TrainChord>} />
           <Route path="interval" element={<TrainInterval></TrainInterval>} />
+          <Route index element={<TrainInterval></TrainInterval>} />
+          <Route path="note" element={<TrainNote></TrainNote>} />
+          <Route path="melody" element={<TrainMelody></TrainMelody>} />
+        </Route>
+
+        <Route path='/listen' element={<TrainSideBar></TrainSideBar>}>
+          <Route index element={<TrainInterval></TrainInterval>} />
+
+          <Route path="chord" element={<TrainChord></TrainChord>} />
+          <Route path="interval" element={<TrainInterval></TrainInterval>} />
+          <Route path="note" element={<TrainNote></TrainNote>} />
+          <Route path="melody" element={<TrainMelody></TrainMelody>} />
+        </Route>
+
+        <Route path='/test' element={<TrainSideBar></TrainSideBar>}>
+          <Route path="chord" element={<TrainChord></TrainChord>} />
+          <Route path="interval" element={<TrainInterval></TrainInterval>} />
+          <Route element={<TrainInterval></TrainInterval>} />
+
           <Route path="note" element={<TrainNote></TrainNote>} />
           <Route path="melody" element={<TrainMelody></TrainMelody>} />
         </Route>

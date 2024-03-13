@@ -1,7 +1,7 @@
 const TrainNote = ({ settings }) => {
     return (
         <>
-            Note, pitch perfect?!
+            <h1> Note Training </h1>
         </>
     )
 }

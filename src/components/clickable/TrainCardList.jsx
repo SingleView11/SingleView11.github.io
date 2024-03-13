@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Col, Row } from 'antd';
+import {  Col, Row } from 'antd';
 import { CardTemp } from './TrainCards';
 
 
@@ -8,9 +8,9 @@ const TrainCardList = (cardInfos) => {
     return (
         <Row    >
             {
-                cardInfos.map(cardInfo => {
+                cardInfos.map((cardInfo, index) => {
                     return (
-                        <Col >
+                        <Col key={`cardInfo: ${index}`}>
                             <CardTemp {...(cardInfo)}></CardTemp>
                         </Col>
                     )
@@ -22,7 +22,6 @@ const TrainCardList = (cardInfos) => {
         </Row>
 
     )
-    // console.log(cardInfos)
     // const cardLists = cardInfos.map(cardInfo => {
     //     return () => (
             
@@ -42,7 +41,6 @@ const RandomCardListNum = ({ num = 5 }) => {
         title: "listtrial",
         description: "just trying"
     })
-    console.log(cardInfos)
     return TrainCardList(cardInfos)
 }
 
