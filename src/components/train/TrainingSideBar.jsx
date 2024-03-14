@@ -6,20 +6,20 @@ import TrainArea from './TrainArea';
 import { generateSubNavFrom } from '../../utils/levelTypes';
 import { useContext } from 'react';
 import { ConfigContext } from '../globalStates/ConfigContext';
-import { configMap } from '../../utils/initConfig';
-import { easyConfig, mediumConfig, hardConfig } from '../../utils/initConfig';
+import { configMap } from '../../utils/trainConfig';
+import { easyConfig, mediumConfig, hardConfig } from '../../utils/trainConfig';
 import { ConfigComponent } from './FillConfig';
 import { TrainResult } from './TrainResult';
+import { generateInitProgress } from '../../utils/progressConfig';
+
 
 const { Header, Content, Sider } = Layout;
 const { Text, Title } = Typography;
 
-
-
 const TrainSideBar = () => {
 
     const [collapsed, setCollapsed] = useState(true);
-    const { config, setConfig, trainState, setTrainState } = useContext(ConfigContext)
+    const { config, setConfig, trainState, setTrainState, progress, setProgress } = useContext(ConfigContext)
 
     const items2 = generateSubNavFrom((e, choice) => {
         setCollapsed(true);
@@ -27,7 +27,8 @@ const TrainSideBar = () => {
     });
 
     const startTraining = () => {
-        setTrainState(1 - trainState)
+        setTrainState(1)
+        setProgress(generateInitProgress())
     }
 
     const {
@@ -66,7 +67,7 @@ const TrainSideBar = () => {
                     }}
                 >
 
-                    {trainState == 0 &&  <Content
+                    {trainState == 0 && <Content
                         style={{
 
                             padding: 12,
@@ -94,7 +95,7 @@ const TrainSideBar = () => {
 
                     </Content>}
 
-                    {trainState == 0 &&  <Content
+                    {trainState == 0 && <Content
                         style={{
                             margin: 0,
                             marginTop: 20,
@@ -122,14 +123,14 @@ const TrainSideBar = () => {
 
 
 
-                    
-                        {trainState == 0 && <ConfigComponent></ConfigComponent>}
 
-                        {trainState == 1 && <TrainArea></TrainArea>}
+                    {trainState == 0 && <ConfigComponent></ConfigComponent>}
 
-                        {trainState == 2 && <TrainResult></TrainResult>}
+                    {trainState == 1 && <TrainArea></TrainArea>}
 
-                
+                    {trainState == 2 && <TrainResult></TrainResult>}
+
+
 
                 </Layout>
             </Layout>
