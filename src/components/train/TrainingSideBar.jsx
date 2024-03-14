@@ -122,23 +122,14 @@ const TrainSideBar = () => {
 
 
 
-                    <Content
-                        style={{
-                            padding: 24,
-                            margin: 0,
-                            marginTop: 20,
-                            minHeight: 480,
-                            background: colorBgContainer,
-                            borderRadius: borderRadiusLG,
-                        }}
-                    >
+                    
                         {trainState == 0 && <ConfigComponent></ConfigComponent>}
 
                         {trainState == 1 && <TrainArea></TrainArea>}
 
                         {trainState == 2 && <TrainResult></TrainResult>}
 
-                    </Content>
+                
 
                 </Layout>
             </Layout>
