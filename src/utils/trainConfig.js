@@ -138,10 +138,14 @@ const melodySounds = ["C", "C#", "D", "D#",
     "E", "F", "F#", "G", "G#", "A", "A#", "B"
 ]
 
+
+
 const intervalPlayForms = ["Ascend", "Descend", "Ascend & Descend", "Harmonic", "All Mixed"]
 const chordPlayForms = ["Ascend", "Descend", "Ascend & Descend", "Harmonic", "All Mixed"]
 const notePlayForms = ["Single"]
 const melodyPlayForms = ["Ascend", "Descend", "Random"]
+
+export {intervalSounds, chordSounds, noteSounds, melodySounds}
 
 const uniqueProps = {
     "interval": {

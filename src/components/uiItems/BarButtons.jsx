@@ -82,7 +82,7 @@ export const ButtonGroupWithFunc = ({ config, setConfig, propName, clickFunc, ta
                 return (
                     <Col key={soundInfo["key"]}>
                         <Button style={{ margin: 10, width: buttonSize, }} id={soundInfo.key}
-                            key={soundInfo["key"]} name={soundInfo["key"]} 
+                            key={soundInfo["key"]} name={soundInfo["name"]} 
                             onClick={clickFunc}
                             type={soundInfo[tagName] ? "primary" : "default"}
                             size={size}

@@ -6,6 +6,10 @@ const encourageTips = [
     "Some artists consider music as carriers of emotions. Interestingly, some philosophers in ancient China 3000 years ago also hold this view."
 ]
 
+export const randomElement = (arr) => {
+    return arr[Math.floor(Math.random() * arr.length)]
+}
+
 export const randomTip = () => {
-    return encourageTips[Math.floor(Math.random() * encourageTips.length)];
+    return randomElement(encourageTips)
 }
