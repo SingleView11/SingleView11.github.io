@@ -80,7 +80,7 @@ export const ButtonGroupWithFunc = ({ config, setConfig, propName, clickFunc, ta
         if(soundInfo.isCorrect == -1) {
             return soundInfo[tagName] ? "primary" : "default"
         }
-        if(soundInfo.isCorrect == 1) return "danger"
+        if(soundInfo.isCorrect == 1) return "warning"
         if(soundInfo.isCorrect == 2) return "success"
     }
     return (

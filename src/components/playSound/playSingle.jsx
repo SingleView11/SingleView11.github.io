@@ -54,8 +54,8 @@ const sampler = new Tone.Sampler({
 //     noteoff: note => sampler.triggerRelease(note.name),
 
 // });
-const reverb = new Tone.Reverb(10);
-sampler.chain(reverb, Tone.Destination);
+// const reverb = new Tone.Reverb(10);
+// sampler.chain(reverb, Tone.Destination);
 
 export const stopSamplerAll = () => {
     // sampler.triggerRelease([], 0)
@@ -68,9 +68,10 @@ export const playSoundDemo = () => {
     sampler.triggerAttackRelease([randomElement(noteSounds) + "4"], 10)
 }
 
-export const playSoundOnce = (sounds, time) => {
+export const playSoundOnce = (sounds, time = 3) => {
     sampler.triggerAttackRelease(sounds, time)
 }
+
 
 const playSingleNote = (note, time) => {
     sampler.triggerAttackRelease([note], time)

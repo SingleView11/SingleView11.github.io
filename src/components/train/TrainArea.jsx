@@ -10,7 +10,8 @@ import { Col, Row, Slider, InputNumber, Progress } from 'antd';
 import { HintModal, ChooseModal } from '../uiItems/HintModal';
 import { ProgressBarTrain } from '../uiItems/ProgressBar';
 import { playSoundDemo, stopSamplerAll } from '../playSound/playSingle';
-import { genRandomProblem } from '../playSound/playSpecific';
+import { genRandomProblem, playWrongSoundWithBase } from '../playSound/playSpecific';
+import { playProblem } from '../playSound/playProblem';
 
 const { Header, Content, Sider } = Layout;
 
@@ -50,13 +51,21 @@ const TrainArea = () => {
         setCurProblem(genRandomProblem(config))
 
         // playsound
-        playCurProblem()
 
     }
 
+    useEffect(()=>{
+        if(trainState == 1) {
+            playCurProblem()
+
+        }
+    }, [curProblem])
+
     const playCurProblem = () => {
-        playSoundDemo()
         // playSoundOnce([curProblem], config)
+
+        playProblem(curProblem, config)
+
     }
 
 
@@ -80,7 +89,7 @@ const TrainArea = () => {
 
     const correctAns = (sound) => {
         if (config.rightThen.cur == 0) {
-            playSoundDemo()
+            playCurProblem()
         }
         if (ansStatus == 1) return;
         if (ansStatus == -1) {
@@ -99,6 +108,7 @@ const TrainArea = () => {
             setTimeout(()=>{
                 endTrain()
             }, 2000)
+            return 
         }
 
         // passing outdated data
@@ -111,7 +121,7 @@ const TrainArea = () => {
 
     const wrongAns = (sound) => {
         if (config.wrongThen.cur == 0) {
-            playSoundDemo()
+            playWrongSoundWithBase()
         }
         if (ansStatus == -1) {
             setProgress({
@@ -128,7 +138,7 @@ const TrainArea = () => {
 
     const clickButtonHandler = (e) => {
         const buttonVal = e.currentTarget.name
-        if (true || curProblem == buttonVal) {
+        if (curProblem.name == buttonVal) {
             setConfig({
                 ...config,
                 sounds: config.sounds.map(sound => {

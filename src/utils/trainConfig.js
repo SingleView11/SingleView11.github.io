@@ -41,7 +41,7 @@ export const generateConfig = (obj) => {
     const waitIntervalInit = {
         min: 0,
         max: 5,
-        cur: 1,
+        cur: 3,
     }
 
     const scaleRangeInit = {
@@ -195,9 +195,9 @@ for (let i = 0; i < chordDiff.length; i++) {
 }
 
 
-export const easyConfig = alterConfigDifficulty(60, 0, 3, 1, diffMap, 1)
-export const mediumConfig = alterConfigDifficulty(120, 1, 1, 2, diffMap, 3)
-export const hardConfig = alterConfigDifficulty(180, 2, 0, 3, diffMap, 7)
+export const easyConfig = alterConfigDifficulty(60, 0, 5, 1, diffMap, 1)
+export const mediumConfig = alterConfigDifficulty(120, 1, 3, 2, diffMap, 3)
+export const hardConfig = alterConfigDifficulty(180, 2, 1, 3, diffMap, 7)
 
 
 const configMap = new Map();

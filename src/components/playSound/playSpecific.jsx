@@ -1,5 +1,6 @@
 import { randomElement, randomNumberInRange, getRandomIntInclusive } from "../../utils/giveTips"
 import { intervalSounds, noteSounds, chordSounds, chordForms } from "../../utils/musicTerms"
+import { playSoundOnce } from "./playSingle"
 
 const NOTE_RANGE = { min: 0, max: 96 }
 
@@ -70,7 +71,7 @@ const generateChordNoteGroup = (name) => {
 
     let noteNums
     while (!ok) {
-        let startNoteNum = randomNumberInRange()
+        let startNoteNum = randomNumberInRange(NOTE_RANGE)
         noteNums = chordArr.map(chordNoteNum => {
             return chordNoteNum + startNoteNum;
         })
@@ -114,6 +115,7 @@ const generateMelodyNoteGroup = (noteNum) => {
 }
 
 // playForm: 1 for melody (seperate), 2 for chord (together), 3 for random of 1 and 2
+
 
 export const genRandomProblem = (config) => {
 
@@ -207,7 +209,13 @@ export const genRandomProblem = (config) => {
         showName: showName,
         playForm: playForm,
         playNotes: playNotes,
+        name: name
     }
 
     return ans
+}
+
+
+export const playWrongSoundWithBase = (problem) => {
+    playSoundOnce(["C", "E", "G"].map(t=>t+"4"))
 }
