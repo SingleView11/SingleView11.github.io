@@ -10,9 +10,9 @@ import { Col, Row, Slider, InputNumber, Progress } from 'antd';
 import { HintModal, ChooseModal } from '../uiItems/HintModal';
 import { ProgressBarTrain } from '../uiItems/ProgressBar';
 import { playSoundDemo, stopSamplerAll } from '../playSound/playSingle';
+import { genRandomProblem } from '../playSound/playSpecific';
 
 const { Header, Content, Sider } = Layout;
-const { Text, Title } = Typography;
 
 
 
@@ -23,7 +23,7 @@ const TrainArea = () => {
         setTrainState(2)
     }
 
-    const [curProblem, setCurProblem] = useState([])
+    const [curProblem, setCurProblem] = useState({})
 
     // -1 for not answered, 0 for not passed, 1 for passed and waiting for next one
     const [ansStatus, setAnsStatus] = useState(-1)
@@ -45,13 +45,12 @@ const TrainArea = () => {
             })
         })
 
-        // select a random sound mode to play
+        // generate a random problem suited to current config
+
+        setCurProblem(genRandomProblem(config))
 
         // playsound
         playCurProblem()
-
-
-
 
     }
 
@@ -96,7 +95,7 @@ const TrainArea = () => {
         setAnsStatus(1)
         // console.log(progress)
         
-        if(progress.finishedNum >= config.questionNumber.cur - 1) {
+        if(config.questionNumber.cur && progress.finishedNum >= config.questionNumber.cur - 1) {
             setTimeout(()=>{
                 endTrain()
             }, 2000)
@@ -183,7 +182,7 @@ const TrainArea = () => {
                     borderRadius: borderRadiusLG,
                 }}
             >
-                <TitleCen text={"C"}></TitleCen>
+                <TitleCen level={2}  text={ansStatus !== 1 ? "?" : curProblem.showName}></TitleCen>
 
                 <ButtonGroupWithFunc
                     config={config} setConfig={setConfig} propName={"sounds"}

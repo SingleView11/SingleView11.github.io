@@ -2,7 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from 'antd';
 
-const choices = ["interval", "note", "chord", "melody"]
+// const choices = ["interval", "note", "chord", "melody"]
+const choices = ["interval", "note", "chord"]
 const levels = ["Easy", "Medium", "Hard", "Extreme", "Custom"]
 
 // generate subnav item object 

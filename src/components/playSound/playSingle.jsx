@@ -1,6 +1,6 @@
 import * as Tone from "tone"
 import { randomElement } from "../../utils/giveTips";
-import { noteSounds } from "../../utils/trainConfig";
+import { noteSounds } from "../../utils/musicTerms";
 
 
 // Juste quelques tests à partir des docs du site Tone.js ! https://tonejs.github.io/

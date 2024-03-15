@@ -1,4 +1,5 @@
-
+import {intervalSounds, melodySounds, chordSounds, noteSounds} from './musicTerms'
+import {intervalPlayForms, melodyPlayForms, chordPlayForms, notePlayForms} from './musicTerms'
 export const generateConfig = (obj) => {
 
     const { type, soundNames, playForms } = obj
@@ -31,9 +32,15 @@ export const generateConfig = (obj) => {
         cur: 0,
     }
 
+    const noteBpmInit = {
+        min: 20,
+        max: 320,
+        cur: 120,
+    }
+
     const waitIntervalInit = {
         min: 0,
-        max: 3,
+        max: 5,
         cur: 1,
     }
 
@@ -68,6 +75,7 @@ export const generateConfig = (obj) => {
         waitInterval: waitIntervalInit,
         questionNumber: questionNumberInit,
 
+        noteBpm: noteBpmInit,
 
         wrongThen: wrongThenInit,
         rightThen: rightThenInit,
@@ -114,41 +122,6 @@ export const generateSpecificConfig = (obj) => {
 
 }
 
-
-const intervalSounds = ["Minor 2nd", "Major 2nd", "Minor 3rd", "Major 3rd",
-    "Perfect 4th", "Tritone", "Perfect 5th", "Minor 6th",
-    "Major 6th", "Minor 7th", "Major 7th", "Octave"
-]
-
-const chordSoundsFull = ["Major", "Minor", "Augmented", "Diminished",
-    "Sus 2", "Sus 4", "Dominant 7th", "Major 7th",
-    "Minor 7th", "Minor Major 7th", "Diminished 7th", "Half Diminished 7th",
-    "Augmented 7th", "Augmented Major 7th", "Major 6th", "Minor 6th"
-]
-
-const chordSounds = ["Maj", "Min", "Aug", "Dim",
-    "Sus 2", "Sus 4", "Dom 7", "Maj 7",
-    "Min 7", "Min Maj 7", "Dim 7", "Half Dim 7",
-    "Aug 7", "Aug Maj 7", "Maj 6", "Min 6"
-]
-
-const noteSounds = ["C", "C#", "D", "D#",
-    "E", "F", "F#", "G", "G#", "A", "A#", "B"
-]
-
-const melodySounds = ["C", "C#", "D", "D#",
-    "E", "F", "F#", "G", "G#", "A", "A#", "B"
-]
-
-
-
-const intervalPlayForms = ["Ascend", "Descend", "Ascend & Descend", "Harmonic", "All Mixed"]
-const chordPlayForms = ["Ascend", "Descend", "Ascend & Descend", "Harmonic", "All Mixed"]
-const notePlayForms = ["Single"]
-const melodyPlayForms = ["Ascend", "Descend", "Random"]
-
-export {intervalSounds, chordSounds, noteSounds, melodySounds}
-
 const uniqueProps = {
     "interval": {
 
@@ -165,11 +138,11 @@ const uniqueProps = {
 }
 
 
-export const initialConfig = generateConfig({ type: "Interval", soundNames: intervalSounds, playForms: intervalPlayForms })
-export const intervalConfig = generateSpecificConfig({ type: "Interval", soundNames: intervalSounds, playForms: intervalPlayForms })
-export const chordConfig = generateSpecificConfig({ type: "Chord", soundNames: chordSounds, playForms: chordPlayForms })
-export const noteConfig = generateSpecificConfig({ type: "Note", soundNames: noteSounds, playForms: notePlayForms })
-export const melodyConfig = generateSpecificConfig({ type: "Melody", soundNames: melodySounds, playForms: melodyPlayForms })
+export const initialConfig = generateConfig({ type: "interval", soundNames: intervalSounds, playForms: intervalPlayForms })
+export const intervalConfig = generateSpecificConfig({ type: "interval", soundNames: intervalSounds, playForms: intervalPlayForms })
+export const chordConfig = generateSpecificConfig({ type: "chord", soundNames: chordSounds, playForms: chordPlayForms })
+export const noteConfig = generateSpecificConfig({ type: "note", soundNames: noteSounds, playForms: notePlayForms })
+export const melodyConfig = generateSpecificConfig({ type: "melody", soundNames: melodySounds, playForms: melodyPlayForms })
 
 export const alterConfigDifficulty = (spd, preludeUsage, waitTime, diff, diffMap, scaleNum) => {
     const genConf = (config) => {

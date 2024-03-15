@@ -10,7 +10,6 @@ import TrainSideBar from './components/train/TrainingSideBar';
 
 import { TrainChord } from './components/train/TrainChord';
 import { TrainInterval } from './components/train/TrainInterval';
-import { TrainMelody } from './components/train/TrainMelody';
 import { TrainNote } from './components/train/TrainNote';
 
 import 'antd-button-color/dist/css/style.css';
@@ -40,7 +39,7 @@ const App = () => {
             <Route path="interval" element={<TrainInterval></TrainInterval>} />
             <Route index element={<TrainInterval></TrainInterval>} />
             <Route path="note" element={<TrainNote></TrainNote>} />
-            <Route path="melody" element={<TrainMelody></TrainMelody>} />
+            {/* <Route path="melody" element={<TrainMelody></TrainMelody>} /> */}
           </Route>
 
           <Route path='/listen' element={<TrainSideBar></TrainSideBar>}>
@@ -49,7 +48,7 @@ const App = () => {
             <Route path="chord" element={<TrainChord></TrainChord>} />
             <Route path="interval" element={<TrainInterval></TrainInterval>} />
             <Route path="note" element={<TrainNote></TrainNote>} />
-            <Route path="melody" element={<TrainMelody></TrainMelody>} />
+            {/* <Route path="melody" element={<TrainMelody></TrainMelody>} /> */}
           </Route>
 
           <Route path='/test' element={<TrainSideBar></TrainSideBar>}>
@@ -58,7 +57,7 @@ const App = () => {
             <Route element={<TrainInterval></TrainInterval>} />
 
             <Route path="note" element={<TrainNote></TrainNote>} />
-            <Route path="melody" element={<TrainMelody></TrainMelody>} />
+            {/* <Route path="melody" element={<TrainMelody></TrainMelody>} /> */}
           </Route>
 
           <Route path='*' element={<ErrorComponent />} />

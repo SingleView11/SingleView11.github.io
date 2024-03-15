@@ -30,6 +30,7 @@ const ConfigComponent = () => {
             <ButtonGroupWithFunc config={config} setConfig={setConfig} propName={"sounds"} disableCtl={false} tagName={"playable"} clickFunc={soundChoose} ></ButtonGroupWithFunc>
 
             <SlideBarProp config={config} setConfig={setConfig} propName={"speed"} propTitle={"Speed"} ></SlideBarProp>
+            <SlideBarProp config={config} setConfig={setConfig} propName={"noteBpm"} propTitle={"Note bpm"} ></SlideBarProp>
             <SlideBarProp config={config} setConfig={setConfig} propName={"questionNumber"} propTitle={"Question number"} sliderStep={5} ></SlideBarProp>
             <SlideBarProp config={config} setConfig={setConfig} propName={"scaleRange"} propTitle={"Scale Range"} ></SlideBarProp>
             <SlideBarProp config={config} setConfig={setConfig} propName={"waitInterval"} propTitle={"Interval Time"} sliderStep={0.01} ></SlideBarProp>

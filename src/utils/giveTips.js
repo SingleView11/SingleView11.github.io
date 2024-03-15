@@ -13,3 +13,15 @@ export const randomElement = (arr) => {
 export const randomTip = () => {
     return randomElement(encourageTips)
 }
+
+export function getRandomIntInclusive(min, max) {
+    const minCeiled = Math.ceil(min);
+    const maxFloored = Math.floor(max);
+    return Math.floor(Math.random() * (maxFloored - minCeiled + 1) + minCeiled); // The maximum is inclusive and the minimum is inclusive
+  }
+
+  
+export const randomNumberInRange = (rg) => {
+    let ans =getRandomIntInclusive(rg.min, rg.max)
+    return ans
+}
