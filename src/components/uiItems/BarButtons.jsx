@@ -76,6 +76,13 @@ export const ButtonSelecOne = ({ config, setConfig, propName, propTitle }) => {
 }
 
 export const ButtonGroupWithFunc = ({ config, setConfig, propName, clickFunc, tagName, disableCtl = false, buttonSize=200, size="" }) => {
+    const judgeButtonType = (soundInfo, tagName) => {
+        if(soundInfo.isCorrect == -1) {
+            return soundInfo[tagName] ? "primary" : "default"
+        }
+        if(soundInfo.isCorrect == 1) return "danger"
+        if(soundInfo.isCorrect == 2) return "success"
+    }
     return (
         <Row justify="center">
             {config[propName].map((soundInfo, index) => {
@@ -84,7 +91,7 @@ export const ButtonGroupWithFunc = ({ config, setConfig, propName, clickFunc, ta
                         <Button style={{ margin: 10, width: buttonSize, }} id={soundInfo.key}
                             key={soundInfo["key"]} name={soundInfo["name"]} 
                             onClick={clickFunc}
-                            type={soundInfo[tagName] ? "primary" : "default"}
+                            type={judgeButtonType(soundInfo, tagName)}
                             size={size}
                             // disabled={true}
                             disabled={soundInfo[tagName] ? false : disableCtl}

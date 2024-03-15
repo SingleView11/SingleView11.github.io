@@ -57,7 +57,8 @@ export const generateConfig = (obj) => {
             name: soundName,
             playable: true,
             description: `${index + 1} semitones`,
-            key: `${type}: ${index + 1}`
+            key: `${type}: ${index + 1}`,
+            isCorrect: -1, // -1 for not engaging, 1 for false, 2 for true
         }
     })
 
@@ -98,7 +99,8 @@ export const generateSpecificConfig = (obj) => {
             name: soundName,
             playable: true,
             description: `${index + 1} semitones`,
-            key: `${type}: ${index + 1}`
+            key: `${type}: ${index + 1}`,
+            isCorrect: -1,
         }
     })
 

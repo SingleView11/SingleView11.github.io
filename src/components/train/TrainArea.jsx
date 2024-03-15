@@ -19,6 +19,7 @@ const { Text, Title } = Typography;
 const TrainArea = () => {
 
     const endTrain = () => {
+        stopSamplerAll()
         setTrainState(2)
     }
 
@@ -33,6 +34,16 @@ const TrainArea = () => {
         // init buttons and ans status
 
         setAnsStatus(-1)
+
+        setConfig({
+            ...config,
+            sounds: config.sounds.map(sound => {
+                return {
+                    ...sound,
+                    isCorrect: -1
+                }
+            })
+        })
 
         // select a random sound mode to play
 
@@ -84,7 +95,6 @@ const TrainArea = () => {
         }
         setAnsStatus(1)
         // console.log(progress)
-        stopSamplerAll()
         
         if(progress.finishedNum >= config.questionNumber.cur - 1) {
             setTimeout(()=>{
@@ -120,9 +130,29 @@ const TrainArea = () => {
     const clickButtonHandler = (e) => {
         const buttonVal = e.currentTarget.name
         if (true || curProblem == buttonVal) {
+            setConfig({
+                ...config,
+                sounds: config.sounds.map(sound => {
+                    if(sound.name !== buttonVal ) return sound;
+                    return {
+                        ...sound,
+                        isCorrect: 2
+                    }
+                })
+            })
             correctAns(buttonVal)
         }
         else {
+            setConfig({
+                ...config,
+                sounds: config.sounds.map(sound => {
+                    if(sound.name !== buttonVal ) return sound;
+                    return {
+                        ...sound,
+                        isCorrect: 1
+                    }
+                })
+            })
             wrongAns(buttonVal)
         }
     }
