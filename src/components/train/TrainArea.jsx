@@ -19,8 +19,19 @@ const { Header, Content, Sider } = Layout;
 
 const TrainArea = () => {
 
+    const { config, setConfig, trainState, setTrainState, progress, setProgress } = useContext(ConfigContext)
+
     const endTrain = () => {
         stopSamplerAll()
+        setConfig({
+            ...config,
+            sounds: config.sounds.map(sound => {
+                return {
+                    ...sound,
+                    isCorrect: -1,
+                }
+            })
+        })
         setTrainState(2)
     }
 
@@ -70,7 +81,6 @@ const TrainArea = () => {
 
 
 
-    const { config, setConfig, trainState, setTrainState, progress, setProgress } = useContext(ConfigContext)
 
     const effectRan = useRef(false);
 
@@ -98,9 +108,12 @@ const TrainArea = () => {
                 ...progress,
                 rightNum: progress.rightNum + 1,
                 rightSounds: progress.rightSounds.set(sound, (progress.rightSounds.get(sound) ?? 0) + 1),
-                finishedNum: progress.finishedNum + 1,
             })
         }
+        setProgress({
+            ...progress,
+            finishedNum: progress.finishedNum + 1,
+        })
         setAnsStatus(1)
         // console.log(progress)
         

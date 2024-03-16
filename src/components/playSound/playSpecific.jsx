@@ -138,7 +138,7 @@ export const genRandomProblem = (config) => {
         let ok = false
         let scaleNum
         while(!ok) {
-            scaleNum = getRandomIntInclusive(3, 5)
+            scaleNum = randomNumberInRange(config.scaleRange.cur)
             ok = true
             if(note2Number(name) + 12 * scaleNum  > NOTE_RANGE.max) ok = false
         }

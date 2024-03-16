@@ -4,6 +4,82 @@ import { Col, Row, Slider, InputNumber } from 'antd';
 import { TitleCen } from "./titleFunc";
 import { upFirst } from "../../utils/levelTypes";
 
+export const SlideBarRangeProp = ({ config, setConfig, propName, propTitle, sliderStep = 1 }) => {
+    let cfg = {
+        ...config
+    }
+
+    const propChoose = (value) => {
+        
+        cfg[propName] = {
+            ...cfg[propName],
+            cur: {
+                min: value[0],
+                max: value[1],
+            }
+        }
+        setConfig(cfg)
+
+    }
+    return (
+        <>
+            <TitleCen text={propTitle}></TitleCen>
+            <Row justify="center">
+                <Col span={12}>
+                    <Slider
+                        range
+                        min={config[propName].min}
+                        max={config[propName].max}
+                        value={[config[propName].cur.min, config[propName].cur.max]}
+                        onChange={propChoose}
+                        step={sliderStep}
+
+                    />
+                </Col>
+                <Col span={2}>
+                    <InputNumber
+                        min={config[propName].min}
+                        max={config[propName].cur.max}
+                        style={{ margin: '0 16px', width: 50 }}
+                        value={config[propName].cur.min}
+                        onChange={(value) => {
+                            cfg[propName] = {
+                                ...cfg[propName],
+                                cur: {
+                                    ...cfg[propName].cur,
+                                    min: value,
+                                }
+                            }
+                            setConfig(cfg)
+                        }}
+                        step={sliderStep}
+                    />
+                    <InputNumber
+                        min={config[propName].cur.min}
+                        max={config[propName].max}
+                        style={{ margin: '0 16px', width: 50 }}
+                        value={config[propName].cur.max}
+                        onChange={(value) => {
+                            cfg[propName] = {
+                                ...cfg[propName],
+                                cur: {
+                                    ...cfg[propName].cur,
+                                    max: value,
+                                }
+                            }
+                            setConfig(cfg)
+                        }}
+                        step={sliderStep}
+                    />
+                </Col>
+            </Row>
+        </>
+    )
+    // return (
+    //     <Slider range defaultValue={[20, 50]} disabled={disabled} />
+    // )
+}
+
 export const SlideBarProp = ({ config, setConfig, propName, propTitle, sliderStep = 1 }) => {
     let cfg = {
         ...config
@@ -75,13 +151,13 @@ export const ButtonSelecOne = ({ config, setConfig, propName, propTitle }) => {
     )
 }
 
-export const ButtonGroupWithFunc = ({ config, setConfig, propName, clickFunc, tagName, disableCtl = false, buttonSize=200, size="" }) => {
+export const ButtonGroupWithFunc = ({ config, setConfig, propName, clickFunc, tagName, disableCtl = false, buttonSize = 200, size = "" }) => {
     const judgeButtonType = (soundInfo, tagName) => {
-        if(soundInfo.isCorrect == -1) {
+        if (soundInfo.isCorrect == -1) {
             return soundInfo[tagName] ? "primary" : "default"
         }
-        if(soundInfo.isCorrect == 1) return "warning"
-        if(soundInfo.isCorrect == 2) return "success"
+        if (soundInfo.isCorrect == 1) return "warning"
+        if (soundInfo.isCorrect == 2) return "success"
     }
     return (
         <Row justify="center">
@@ -89,7 +165,7 @@ export const ButtonGroupWithFunc = ({ config, setConfig, propName, clickFunc, ta
                 return (
                     <Col key={soundInfo["key"]}>
                         <Button style={{ margin: 10, width: buttonSize, }} id={soundInfo.key}
-                            key={soundInfo["key"]} name={soundInfo["name"]} 
+                            key={soundInfo["key"]} name={soundInfo["name"]}
                             onClick={clickFunc}
                             type={judgeButtonType(soundInfo, tagName)}
                             size={size}

@@ -2,7 +2,7 @@ import React, { useContext, useState } from "react"
 import { TitleCen } from "../uiItems/titleFunc";
 import { upFirst } from "../../utils/levelTypes";
 import { ConfigContext } from "../globalStates/ConfigContext";
-import { SlideBarProp, ButtonGroupWithFunc, ButtonSelecOne } from "../uiItems/BarButtons";
+import { SlideBarProp, ButtonGroupWithFunc, ButtonSelecOne, SlideBarRangeProp } from "../uiItems/BarButtons";
 
 
 const ConfigComponent = () => {
@@ -18,7 +18,10 @@ const ConfigComponent = () => {
                 }
             })
         })
+        console.log(config)
     }
+
+    
 
 
     return (
@@ -32,7 +35,8 @@ const ConfigComponent = () => {
             <SlideBarProp config={config} setConfig={setConfig} propName={"speed"} propTitle={"Speed"} ></SlideBarProp>
             <SlideBarProp config={config} setConfig={setConfig} propName={"noteBpm"} propTitle={"Note bpm"} ></SlideBarProp>
             <SlideBarProp config={config} setConfig={setConfig} propName={"questionNumber"} propTitle={"Question number"} sliderStep={5} ></SlideBarProp>
-            <SlideBarProp config={config} setConfig={setConfig} propName={"scaleRange"} propTitle={"Scale Range"} ></SlideBarProp>
+            {/* <SlideBarProp config={config} setConfig={setConfig} propName={"scaleRange"} propTitle={"Scale Range"} ></SlideBarProp> */}
+            <SlideBarRangeProp config={config} setConfig={setConfig} propName={"scaleRange"} propTitle={"Scale Range"} ></SlideBarRangeProp>
             <SlideBarProp config={config} setConfig={setConfig} propName={"waitInterval"} propTitle={"Interval Time"} sliderStep={0.01} ></SlideBarProp>
             <ButtonSelecOne config={config} setConfig={setConfig} propName={"prelude"} propTitle={"Prelude"}></ButtonSelecOne>
 

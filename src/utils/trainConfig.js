@@ -45,9 +45,12 @@ export const generateConfig = (obj) => {
     }
 
     const scaleRangeInit = {
-        min: 1,
+        min: 0,
         max: 7,
-        cur: 3,
+        cur: {
+            min: 3,
+            max: 4,
+        },
     }
 
     // 0 for unlimited
@@ -144,7 +147,7 @@ export const chordConfig = generateSpecificConfig({ type: "chord", soundNames: c
 export const noteConfig = generateSpecificConfig({ type: "note", soundNames: noteSounds, playForms: notePlayForms })
 export const melodyConfig = generateSpecificConfig({ type: "melody", soundNames: melodySounds, playForms: melodyPlayForms })
 
-export const alterConfigDifficulty = (spd, preludeUsage, waitTime, diff, diffMap, scaleNum) => {
+export const alterConfigDifficulty = (spd, preludeUsage, waitTime, diff, diffMap, scaleNum={min: 4, max: 4}) => {
     const genConf = (config) => {
         return ({
             ...config,
@@ -195,9 +198,9 @@ for (let i = 0; i < chordDiff.length; i++) {
 }
 
 
-export const easyConfig = alterConfigDifficulty(60, 0, 5, 1, diffMap, 1)
-export const mediumConfig = alterConfigDifficulty(120, 1, 3, 2, diffMap, 3)
-export const hardConfig = alterConfigDifficulty(180, 2, 1, 3, diffMap, 7)
+export const easyConfig = alterConfigDifficulty(60, 0, 5, 1, diffMap, {min:4,max:4})
+export const mediumConfig = alterConfigDifficulty(120, 1, 3, 2, diffMap, {min:3,max:5})
+export const hardConfig = alterConfigDifficulty(180, 2, 1, 3, diffMap, {min:0,max:7})
 
 
 const configMap = new Map();

@@ -72,6 +72,10 @@ export const playSoundOnce = (sounds, time = 3) => {
     sampler.triggerAttackRelease(sounds, time)
 }
 
+export const playSoundMulti = (sounds, time = 1, interval = 1) => {
+
+}
+
 
 const playSingleNote = (note, time) => {
     sampler.triggerAttackRelease([note], time)
