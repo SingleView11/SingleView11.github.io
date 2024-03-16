@@ -18,7 +18,6 @@ const ConfigComponent = () => {
                 }
             })
         })
-        console.log(config)
     }
 
     

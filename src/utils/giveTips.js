@@ -25,3 +25,22 @@ export const randomNumberInRange = (rg) => {
     let ans =getRandomIntInclusive(rg.min, rg.max)
     return ans
 }
+
+export const getCorrectRate = (progress) => {
+    if(progress.rightNum + progress.wrongNum == 0) return 0
+    let correctRate = Math.round( progress.rightNum * 100 / (progress.rightNum + progress.wrongNum))
+    return correctRate
+}
+
+export const commentOnProgressResult = (progress) => {
+    let comment = "First step is hard!"
+    let correctRate = getCorrectRate(progress)
+    if(correctRate >= 30) comment = "Not bad, keep on!"
+    if(correctRate >= 60) comment = "Nice Job!"
+    if(correctRate >= 80) comment = "Great Work!"
+    if(correctRate >= 90) comment = "Brilliant!" 
+    if(correctRate >= 95) comment = "Unbelievable!"
+    if(correctRate >= 100) comment = "Excellent perfection!"
+
+    return comment
+}

@@ -103,17 +103,21 @@ const TrainArea = () => {
         }
         if (ansStatus == 1) return;
         if (ansStatus == -1) {
-
             setProgress({
                 ...progress,
                 rightNum: progress.rightNum + 1,
+                finishedNum: progress.finishedNum + 1,
+
                 rightSounds: progress.rightSounds.set(sound, (progress.rightSounds.get(sound) ?? 0) + 1),
             })
+
         }
-        setProgress({
-            ...progress,
-            finishedNum: progress.finishedNum + 1,
-        })
+        else {
+            setProgress({
+                ...progress,
+                finishedNum: progress.finishedNum + 1,
+            })
+        }
         setAnsStatus(1)
         // console.log(progress)
         
@@ -132,7 +136,8 @@ const TrainArea = () => {
 
     }
 
-    const wrongAns = (sound) => {
+    const wrongAns = (soundTrue) => {
+        let sound = curProblem.name
         if (config.wrongThen.cur == 0) {
             playWrongSoundWithBase()
         }

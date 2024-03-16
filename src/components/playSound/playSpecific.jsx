@@ -5,7 +5,6 @@ import { playSoundOnce } from "./playSingle"
 const NOTE_RANGE = { min: 0, max: 96 }
 
 const arr2Str = (arr) => {
-    console.log(arr)
     let ans = ""
     for (let i = 0; i < arr.length; i++) {
         ans += " "
@@ -59,7 +58,7 @@ const generateSingleNoteGroup = () => {
     return [number2Note(noteNumber)]
 }
 
-const generateChordNoteGroup = (name) => {
+const generateChordNoteGroup = (name, config) => {
     let chordArr;
     for (let [index, value] of chordSounds.entries()) {
         if (value == name) {
@@ -67,17 +66,20 @@ const generateChordNoteGroup = (name) => {
         }
     }
     let ok = false
-    console.log(chordArr)
 
     let noteNums
+    let scaleRange = config.scaleRange.cur
+    let curRange = { min: 12 * (scaleRange.min), max: 12 * (scaleRange.max + 1) }
     while (!ok) {
-        let startNoteNum = randomNumberInRange(NOTE_RANGE)
+
+        let startNoteNum = randomNumberInRange(curRange)
         noteNums = chordArr.map(chordNoteNum => {
             return chordNoteNum + startNoteNum;
         })
         ok = true
         for (let [index, value] of noteNums.entries()) {
-            if (value > NOTE_RANGE.max) {
+            // now we do not consdier cases where start and end are not in the same scale, like 11, 13 chord
+            if (value > curRange.max || value < curRange.min) {
                 ok = false
             }
         }
@@ -120,8 +122,8 @@ const generateMelodyNoteGroup = (noteNum) => {
 export const genRandomProblem = (config) => {
 
     const avaiableSounds = []
-    for(let sound of config.sounds) {
-        if(sound.playable) avaiableSounds.push(sound)
+    for (let sound of config.sounds) {
+        if (sound.playable) avaiableSounds.push(sound)
     }
 
     const name = randomElement(avaiableSounds).name
@@ -137,16 +139,16 @@ export const genRandomProblem = (config) => {
     if (type == "note") {
         let ok = false
         let scaleNum
-        while(!ok) {
+        while (!ok) {
             scaleNum = randomNumberInRange(config.scaleRange.cur)
             ok = true
-            if(note2Number(name) + 12 * scaleNum  > NOTE_RANGE.max) ok = false
+            if (note2Number(name) + 12 * scaleNum > NOTE_RANGE.max) ok = false
         }
         let note = `${name}${scaleNum}`
         playNotes.push(note)
     }
     if (type == 'chord') {
-        playNotes = generateChordNoteGroup(name)
+        playNotes = generateChordNoteGroup(name, config)
         if (playFormName == "All Mixed") {
             playFormName = randomElement(["Ascend", "Descend", "Ascend & Descend", "Harmonic"])
         }
@@ -203,7 +205,7 @@ export const genRandomProblem = (config) => {
 
     let showName = `${name}:${arr2Str(playNotes)}`
 
-    if(type == 'note') showName = playNotes[0]
+    if (type == 'note') showName = playNotes[0]
 
     const ans = {
         showName: showName,
@@ -217,5 +219,5 @@ export const genRandomProblem = (config) => {
 
 
 export const playWrongSoundWithBase = (problem) => {
-    playSoundOnce(["C", "E", "G"].map(t=>t+"4"))
+    playSoundOnce(["C", "E", "G"].map(t => t + "4"))
 }

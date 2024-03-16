@@ -38,7 +38,7 @@ export const ChooseModal = ({ endFunc, name, buttonType = "primary", title="hint
             onCancel={handleCancel}
             footer={[
 
-                <Button type="primary" onClick={endFunc ? endFunc : handleCancel} > Yes </Button>,
+                <Button key="primary" type="primary" onClick={endFunc ? endFunc : handleCancel} > Yes </Button>,
                 <Button key="cancel" onClick={handleCancel}> No </Button>,
             ]}
         >
