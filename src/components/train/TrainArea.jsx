@@ -136,10 +136,10 @@ const TrainArea = () => {
 
     }
 
-    const wrongAns = (soundTrue) => {
+    const wrongAns = (soundFalse) => {
         let sound = curProblem.name
         if (config.wrongThen.cur == 0) {
-            playWrongSoundWithBase()
+            playWrongSoundWithBase(curProblem, soundFalse, config)
         }
         if (ansStatus == -1) {
             setProgress({

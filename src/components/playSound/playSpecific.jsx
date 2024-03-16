@@ -1,5 +1,6 @@
 import { randomElement, randomNumberInRange, getRandomIntInclusive } from "../../utils/giveTips"
 import { intervalSounds, noteSounds, chordSounds, chordForms } from "../../utils/musicTerms"
+import { playProblem } from "./playProblem"
 import { playSoundOnce } from "./playSingle"
 
 const NOTE_RANGE = { min: 0, max: 96 }
@@ -58,13 +59,18 @@ const generateSingleNoteGroup = () => {
     return [number2Note(noteNumber)]
 }
 
-const generateChordNoteGroup = (name, config) => {
+const findChordArr = (name) => {
     let chordArr;
     for (let [index, value] of chordSounds.entries()) {
         if (value == name) {
             chordArr = chordArrs[index]
         }
     }
+    return chordArr
+}
+
+const generateChordNoteGroup = (name, config) => {
+    let chordArr = findChordArr(name)
     let ok = false
 
     let noteNums
@@ -85,16 +91,21 @@ const generateChordNoteGroup = (name, config) => {
         }
     }
     console.log(noteNums)
-    return noteNums.map(num => number2Note(num))
+    return { noteNums: noteNums, playNotes: noteNums.map(num => number2Note(num)) }
 }
 
-const generateIntervalNoteGroup = (name) => {
+const findIntervalArr = (name) => {
     let intervalArr;
     for (let [index, value] of intervalSounds.entries()) {
         if (value == name) {
             intervalArr = [0, index + 1]
         }
     }
+    return intervalArr
+}
+
+const generateIntervalNoteGroup = (name) => {
+    let intervalArr = findIntervalArr(name)
     let ok = false
     let noteNums
     while (!ok) {
@@ -109,7 +120,7 @@ const generateIntervalNoteGroup = (name) => {
             }
         }
     }
-    return noteNums.map(noteNum => number2Note(noteNum))
+    return { noteNums: noteNums, playNotes: noteNums.map(num => number2Note(num)) }
 }
 
 const generateMelodyNoteGroup = (noteNum) => {
@@ -118,6 +129,61 @@ const generateMelodyNoteGroup = (noteNum) => {
 
 // playForm: 1 for melody (seperate), 2 for chord (together), 3 for random of 1 and 2
 
+export const genFalseProblem = (problem, falseName, config) => {
+    const type = problem.type
+    const name = problem.name
+
+    if (type == "note") {
+        let diff = note2Number(falseName) - note2Number(name)
+        let falseNoteNum = problem.noteNums[0] + diff
+        if (falseNoteNum < NOTE_RANGE.min) falseNoteNum += 12
+        else if (falseNoteNum > NOTE_RANGE.max) falseNoteNum -= 12
+        return {
+            ...problem,
+            playNotes: [number2Note(falseNoteNum)],
+            noteNums: [falseNoteNum],
+        }
+    }
+
+    if(type == 'chord') {
+        let falseChordArr = findChordArr(falseName)
+        let startNote = problem.noteNums[0]
+        let newArr = falseChordArr.map(num => num+startNote)
+
+        // maybe will trigger bug if 0, 100 cases happen
+        while(newArr[newArr.length-1] > NOTE_RANGE.max) {
+            for(let i = 0; i < newArr.length; i++) {
+                newArr[i] -= 12
+            }
+        }
+
+        return {
+            ...problem,
+            playNotes: newArr.map(num=>number2Note(num)),
+            noteNums: newArr,
+        }
+    }
+
+    if(type == 'interval') {
+        let falseIntervalArr = findIntervalArr(falseName)
+        let startNote = problem.noteNums[0]
+        let newArr = falseIntervalArr.map(num => num+startNote)
+
+        // maybe will trigger bug if 0, 100 cases happen
+        while(newArr[newArr.length-1] > NOTE_RANGE.max) {
+            for(let i = 0; i < newArr.length; i++) {
+                newArr[i] -= 12
+            }
+        }
+
+        return {
+            ...problem,
+            playNotes: newArr.map(num=>number2Note(num)),
+            noteNums: newArr,
+        }
+    }
+
+}
 
 export const genRandomProblem = (config) => {
 
@@ -136,6 +202,8 @@ export const genRandomProblem = (config) => {
 
     let playFormName = config.playForm.options[config.playForm.cur]
 
+    let noteNums
+
     if (type == "note") {
         let ok = false
         let scaleNum
@@ -145,10 +213,13 @@ export const genRandomProblem = (config) => {
             if (note2Number(name) + 12 * scaleNum > NOTE_RANGE.max) ok = false
         }
         let note = `${name}${scaleNum}`
+        noteNums = [scaleNum * 12 + note2Number(name)]
         playNotes.push(note)
     }
     if (type == 'chord') {
-        playNotes = generateChordNoteGroup(name, config)
+        let tmpVal = generateChordNoteGroup(name, config)
+        playNotes = tmpVal.playNotes
+        noteNums = tmpVal.noteNums
         if (playFormName == "All Mixed") {
             playFormName = randomElement(["Ascend", "Descend", "Ascend & Descend", "Harmonic"])
         }
@@ -160,7 +231,7 @@ export const genRandomProblem = (config) => {
         }
         if (playFormName == "Descend") {
             playForm = 1
-            playNotes = playNotes.reverse()
+            // playNotes = playNotes.reverse()
         }
         if (playFormName == "Harmonic") {
             playForm = 2
@@ -168,7 +239,9 @@ export const genRandomProblem = (config) => {
 
     }
     if (type == 'interval') {
-        playNotes = generateIntervalNoteGroup(name)
+        let tmpVal = generateIntervalNoteGroup(name)
+        playNotes = tmpVal.playNotes
+        noteNums = tmpVal.noteNums
         if (playFormName == "All Mixed") {
             playFormName = randomElement(["Ascend", "Descend", "Ascend & Descend", "Harmonic"])
         }
@@ -180,7 +253,7 @@ export const genRandomProblem = (config) => {
         }
         if (playFormName == "Descend") {
             playForm = 1
-            playNotes = playNotes.reverse()
+            // playNotes = playNotes.reverse()
         }
         if (playFormName == "Harmonic") {
             playForm = 2
@@ -211,13 +284,18 @@ export const genRandomProblem = (config) => {
         showName: showName,
         playForm: playForm,
         playNotes: playNotes,
-        name: name
+        originPlayForm: playFormName,
+        noteNums: noteNums,
+        name: name,
+        type: type,
     }
 
     return ans
 }
 
 
-export const playWrongSoundWithBase = (problem) => {
-    playSoundOnce(["C", "E", "G"].map(t => t + "4"))
+export const playWrongSoundWithBase = (problem, soundFalse, config) => {
+    let falseProblem = genFalseProblem(problem, soundFalse, config)
+    playProblem(falseProblem, config)
+    // playSoundOnce(["C", "E", "G"].map(t => t + "4")) 
 }
