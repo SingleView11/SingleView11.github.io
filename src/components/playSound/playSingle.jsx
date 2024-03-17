@@ -1,7 +1,7 @@
 import * as Tone from "tone"
 import { randomElement } from "../../utils/giveTips";
 import { noteSounds } from "../../utils/musicTerms";
-
+import { NOTE_RANGE, number2Note } from "./playSpecific";
 
 // Juste quelques tests à partir des docs du site Tone.js ! https://tonejs.github.io/
 
@@ -41,7 +41,7 @@ const sampler = new Tone.Sampler({
     },
 
     // Cela règle la durée de permanence des notes jouées
-    release: 10,
+    // release: 1,
 
     // Source locale des sons
     // baseUrl: "./audio/salamander/"
@@ -58,18 +58,25 @@ const sampler = new Tone.Sampler({
 // sampler.chain(reverb, Tone.Destination);
 
 export const stopSamplerAll = () => {
-    // sampler.triggerRelease([], 0)
-    sampler.releaseAll(0)
+    // sampler.triggerRelease([], 0)[]
+    sampler.releaseAll()
+    // for(let i = NOTE_RANGE.min; i <= NOTE_RANGE.max; i++) {
+    //     sampler.triggerAttackRelease([number2Note(i)], "+0")
+
+    // }
+    // Tone.Transport.stop()
 }
 
 export const playSoundDemo = () => {
     // sampler.triggerAttackRelease(["C4", "E4", "G4"], 10)
 
-    sampler.triggerAttackRelease([randomElement(noteSounds) + "4"], 10)
+    sampler.triggerAttack([randomElement(noteSounds) + "4"], 10)
 }
 
-export const playSoundOnce = (sounds, time = 3) => {
-    sampler.triggerAttackRelease(sounds, time)
+export const playSoundOnce = (sounds, time = 1) => {
+    // const now = Tone.now()
+    sampler.triggerAttack(sounds)
+    // sampler.triggerRelease(sounds, time)
 }
 
 export const playSoundMulti = (sounds, time = 1, interval = 1) => {

@@ -33,9 +33,9 @@ export const generateConfig = (obj) => {
     }
 
     const noteBpmInit = {
-        min: 20,
-        max: 320,
-        cur: 120,
+        min: 0.01,
+        max: 10,
+        cur: 1,
     }
 
     const waitIntervalInit = {

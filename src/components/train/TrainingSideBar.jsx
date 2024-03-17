@@ -11,6 +11,7 @@ import { easyConfig, mediumConfig, hardConfig } from '../../utils/trainConfig';
 import { ConfigComponent } from './FillConfig';
 import { TrainResult } from './TrainResult';
 import { generateInitProgress } from '../../utils/progressConfig';
+import { stopSamplerAll } from '../playSound/playSingle';
 
 
 const { Header, Content, Sider } = Layout;
@@ -27,6 +28,7 @@ const TrainSideBar = () => {
     });
 
     const startTraining = () => {
+        stopSamplerAll()
         setTrainState(1)
         setProgress(generateInitProgress())
     }

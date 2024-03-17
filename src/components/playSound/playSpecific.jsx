@@ -3,7 +3,7 @@ import { intervalSounds, noteSounds, chordSounds, chordForms } from "../../utils
 import { playProblem } from "./playProblem"
 import { playSoundOnce } from "./playSingle"
 
-const NOTE_RANGE = { min: 0, max: 96 }
+export const NOTE_RANGE = { min: 0, max: 96 }
 
 const arr2Str = (arr) => {
     let ans = ""
@@ -15,12 +15,12 @@ const arr2Str = (arr) => {
 }
 
 // 0 for C0, 12 for C1, ... 96 for C8(max)
-const number2Note = (num) => {
+export const number2Note = (num) => {
     let scale = Math.floor(num / 12), note = num % 12;
     return noteSounds[note] + scale;
 }
 
-const note2Number = (note) => {
+export const note2Number = (note) => {
     for (let [index, val] of noteSounds.entries()) {
         if (note == val) return index
     }

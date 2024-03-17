@@ -9,7 +9,7 @@ import { TitleCen } from '../uiItems/titleFunc';
 import { Col, Row, Slider, InputNumber, Progress } from 'antd';
 import { HintModal, ChooseModal } from '../uiItems/HintModal';
 import { ProgressBarTrain } from '../uiItems/ProgressBar';
-import { playSoundDemo, stopSamplerAll } from '../playSound/playSingle';
+import { playSoundDemo, stopSamplerAll, } from '../playSound/playSingle';
 import { genRandomProblem, playWrongSoundWithBase } from '../playSound/playSpecific';
 import { playProblem } from '../playSound/playProblem';
 
@@ -22,7 +22,7 @@ const TrainArea = () => {
     const { config, setConfig, trainState, setTrainState, progress, setProgress } = useContext(ConfigContext)
 
     const endTrain = () => {
-        stopSamplerAll()
+        // stopSamplerAll()
         setConfig({
             ...config,
             sounds: config.sounds.map(sound => {
@@ -65,8 +65,8 @@ const TrainArea = () => {
 
     }
 
-    useEffect(()=>{
-        if(trainState == 1) {
+    useEffect(() => {
+        if (trainState == 1) {
             playCurProblem()
 
         }
@@ -120,12 +120,12 @@ const TrainArea = () => {
         }
         setAnsStatus(1)
         // console.log(progress)
-        
-        if(config.questionNumber.cur && progress.finishedNum >= config.questionNumber.cur - 1) {
-            setTimeout(()=>{
+
+        if (config.questionNumber.cur && progress.finishedNum >= config.questionNumber.cur - 1) {
+            setTimeout(() => {
                 endTrain()
             }, 2000)
-            return 
+            return
         }
 
         // passing outdated data
@@ -160,7 +160,7 @@ const TrainArea = () => {
             setConfig({
                 ...config,
                 sounds: config.sounds.map(sound => {
-                    if(sound.name !== buttonVal ) return sound;
+                    if (sound.name !== buttonVal) return sound;
                     return {
                         ...sound,
                         isCorrect: 2
@@ -173,7 +173,7 @@ const TrainArea = () => {
             setConfig({
                 ...config,
                 sounds: config.sounds.map(sound => {
-                    if(sound.name !== buttonVal ) return sound;
+                    if (sound.name !== buttonVal) return sound;
                     return {
                         ...sound,
                         isCorrect: 1
@@ -210,7 +210,7 @@ const TrainArea = () => {
                     borderRadius: borderRadiusLG,
                 }}
             >
-                <TitleCen level={2}  text={ansStatus !== 1 ? "?" : curProblem.showName}></TitleCen>
+                <TitleCen level={2} text={ansStatus !== 1 ? "?" : curProblem.showName}></TitleCen>
 
                 <ButtonGroupWithFunc
                     config={config} setConfig={setConfig} propName={"sounds"}
@@ -221,6 +221,7 @@ const TrainArea = () => {
 
                 <Row justify="center" style={{ margin: 20 }}>
                     <Button type='success' style={{ margin: 5 }} onClick={replayFuncTrial}   >Replay</Button>
+                    <Button type='info' style={{ margin: 5 }} onClick={() => { stopSamplerAll() }}   >Pause</Button>
                 </Row>
 
                 <ProgressBarTrain progress={Math.round(100 * (config.questionNumber.cur ? (progress.finishedNum / config.questionNumber.cur) : 0))} ></ProgressBarTrain>

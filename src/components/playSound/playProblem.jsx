@@ -1,19 +1,21 @@
 
-import { playSoundOnce, playSoundMulti } from "./playSingle"
+import { playSoundOnce, playSoundMulti, stopSamplerAll } from "./playSingle"
+
 export const playProblem = (obj, config) => {
-/*
- const ans = {
-        showName: showName,
-        playForm: playForm,
-        playNotes: playNotes,
-    }
-*/
-    if(obj.playForm == 2) {
+    /*
+     const ans = {
+            showName: showName,
+            playForm: playForm,
+            playNotes: playNotes,
+        }
+    */
+    if (obj.playForm == 2) {
         console.log(obj.playNotes)
-        playSoundOnce(obj.playNotes)
+        stopSamplerAll()
+        playSoundOnce(obj.playNotes, config.noteBpm.cur)
     }
 
-    if(obj.playForm == 1) {
+    if (obj.playForm == 1) {
         // 
         playSoundMulti()
     }
