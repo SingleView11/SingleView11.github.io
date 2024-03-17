@@ -1,15 +1,15 @@
-import {intervalSounds, melodySounds, chordSounds, noteSounds} from './musicTerms'
-import {intervalPlayForms, melodyPlayForms, chordPlayForms, notePlayForms} from './musicTerms'
+import { intervalSounds, melodySounds, chordSounds, noteSounds } from './musicTerms'
+import { intervalPlayForms, melodyPlayForms, chordPlayForms, notePlayForms } from './musicTerms'
 export const generateConfig = (obj) => {
 
     const { type, soundNames, playForms } = obj
 
-    // speed
+    // speed, interval second of separate sounds
     const speedInit = {
         // min and max for range
-        min: 40,
-        max: 280,
-        cur: 120,
+        min: 0.1,
+        max: 5,
+        cur: 1,
     }
 
     // playForm mode
@@ -36,7 +36,7 @@ export const generateConfig = (obj) => {
         options: ["play correct note", "silent"],
         cur: 0,
     }
-    
+
     // time of note
     const noteBpmInit = {
         min: 0.01,
@@ -153,7 +153,7 @@ export const chordConfig = generateSpecificConfig({ type: "chord", soundNames: c
 export const noteConfig = generateSpecificConfig({ type: "note", soundNames: noteSounds, playForms: notePlayForms })
 export const melodyConfig = generateSpecificConfig({ type: "melody", soundNames: melodySounds, playForms: melodyPlayForms })
 
-export const alterConfigDifficulty = (spd, preludeUsage, waitTime, diff, diffMap, scaleNum={min: 4, max: 4}) => {
+export const alterConfigDifficulty = (spd, preludeUsage, waitTime, diff, diffMap, scaleNum = { min: 4, max: 4 }) => {
     const genConf = (config) => {
         return ({
             ...config,
@@ -204,9 +204,9 @@ for (let i = 0; i < chordDiff.length; i++) {
 }
 
 
-export const easyConfig = alterConfigDifficulty(60, 0, 5, 1, diffMap, {min:4,max:4})
-export const mediumConfig = alterConfigDifficulty(120, 1, 3, 2, diffMap, {min:3,max:5})
-export const hardConfig = alterConfigDifficulty(180, 2, 1, 3, diffMap, {min:0,max:7})
+export const easyConfig = alterConfigDifficulty(1, 0, 0, 1, diffMap, { min: 4, max: 4 })
+export const mediumConfig = alterConfigDifficulty(2, 1, 2, 2, diffMap, { min: 3, max: 5 })
+export const hardConfig = alterConfigDifficulty(0.5, 2, 1, 3, diffMap, { min: 0, max: 7 })
 
 
 const configMap = new Map();

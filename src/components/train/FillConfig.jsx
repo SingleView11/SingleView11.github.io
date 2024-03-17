@@ -3,6 +3,7 @@ import { TitleCen } from "../uiItems/titleFunc";
 import { upFirst } from "../../utils/levelTypes";
 import { ConfigContext } from "../globalStates/ConfigContext";
 import { SlideBarProp, ButtonGroupWithFunc, ButtonSelecOne, SlideBarRangeProp } from "../uiItems/BarButtons";
+import { isMelody } from "../playSound/playSpecific";
 
 
 const ConfigComponent = () => {
@@ -38,9 +39,8 @@ const ConfigComponent = () => {
             <SlideBarRangeProp config={config} setConfig={setConfig} propName={"scaleRange"} propTitle={"Scale Range"} ></SlideBarRangeProp>
             <SlideBarProp config={config} setConfig={setConfig} propName={"waitInterval"} propTitle={"Problem Interval"} sliderStep={0.01} ></SlideBarProp>
 
-            {/* <SlideBarProp config={config} setConfig={setConfig} propName={"speed"} propTitle={"Speed"} ></SlideBarProp> */}
+            {isMelody(config) && <SlideBarProp config={config} setConfig={setConfig} propName={"speed"} propTitle={"Note Interval"} sliderStep={0.01} ></SlideBarProp>}
             <SlideBarProp config={config} setConfig={setConfig} propName={"noteBpm"} propTitle={"Note length"} sliderStep={0.01} ></SlideBarProp>
-            {/* <SlideBarProp config={config} setConfig={setConfig} propName={"scaleRange"} propTitle={"Scale Range"} ></SlideBarProp> */}
             <ButtonSelecOne config={config} setConfig={setConfig} propName={"prelude"} propTitle={"Prelude"}></ButtonSelecOne>
 
             <ButtonSelecOne config={config} setConfig={setConfig} propName={"wrongThen"} propTitle={"Action after wrong"}></ButtonSelecOne>

@@ -9,7 +9,7 @@ import { TitleCen } from '../uiItems/titleFunc';
 import { Col, Row, Slider, InputNumber, Progress } from 'antd';
 import { HintModal, ChooseModal } from '../uiItems/HintModal';
 import { ProgressBarTrain } from '../uiItems/ProgressBar';
-import { playSoundDemo, stopSamplerAll, } from '../playSound/playSingle';
+import { playSoundDemo, stopSamplerAll, } from '../playSound/playFunction';
 import { genRandomProblem, playWrongSoundWithBase } from '../playSound/playSpecific';
 import { playProblem } from '../playSound/playProblem';
 
@@ -72,11 +72,12 @@ const TrainArea = () => {
         }
     }, [curProblem])
 
-    const playCurProblem = () => {
+    const playCurProblem = async (play = true) => {
         // playSoundOnce([curProblem], config)
-
-        playProblem(curProblem, config)
-
+        if (!play) return
+        await playProblem(curProblem, config).then(()=>{
+            // console.log("")
+        })
     }
 
 
@@ -98,10 +99,6 @@ const TrainArea = () => {
     }, [])
 
     const correctAns = (sound) => {
-        if (config.rightThen.cur == 0) {
-            playCurProblem()
-        }
-        if (ansStatus == 1) return;
         if (ansStatus == -1) {
             setProgress({
                 ...progress,
@@ -112,44 +109,50 @@ const TrainArea = () => {
             })
 
         }
-        else {
+        else if(ansStatus == 0) {
             setProgress({
                 ...progress,
                 finishedNum: progress.finishedNum + 1,
             })
         }
         setAnsStatus(1)
-        // console.log(progress)
 
-        if (config.questionNumber.cur && progress.finishedNum >= config.questionNumber.cur - 1) {
+        playCurProblem(config.rightThen.cur == 0).then(() => {
+            
+
+            if (config.questionNumber.cur && progress.finishedNum >= config.questionNumber.cur - 1) {
+                setTimeout(() => {
+                    endTrain()
+                }, 2000)
+                return
+            }
+
+            // passing outdated data
             setTimeout(() => {
-                endTrain()
-            }, 2000)
-            return
-        }
+                startNewProblem(progress)
+            }, config.waitInterval.cur * 1000)
 
-        // passing outdated data
-        setTimeout(() => {
-            startNewProblem(progress)
-        }, config.waitInterval.cur * 1000 + 500)
 
+        }).catch((e)=>{
+            console.log(e)
+        })
 
     }
 
     const wrongAns = (soundFalse) => {
         let sound = curProblem.name
-        if (config.wrongThen.cur == 0) {
-            playWrongSoundWithBase(curProblem, soundFalse, config)
-        }
-        if (ansStatus == -1) {
-            setProgress({
-                ...progress,
-                wrongNum: progress.wrongNum + 1,
-                wrongSounds: progress.wrongSounds.set(sound, (progress.wrongSounds.get(sound) ?? 0) + 1),
-                chosen: true,
+            playWrongSoundWithBase(curProblem, soundFalse, config, config.wrongThen.cur == 0).then(()=> {
+                if (ansStatus == -1) {
+                    setProgress({
+                        ...progress,
+                        wrongNum: progress.wrongNum + 1,
+                        wrongSounds: progress.wrongSounds.set(sound, (progress.wrongSounds.get(sound) ?? 0) + 1),
+                        chosen: true,
+                    })
+                    setAnsStatus(0)
+                }
             })
-            setAnsStatus(0)
-        }
+        
 
     }
 
@@ -221,7 +224,7 @@ const TrainArea = () => {
 
                 <Row justify="center" style={{ margin: 20 }}>
                     <Button type='success' style={{ margin: 5 }} onClick={replayFuncTrial}   >Replay</Button>
-                    <Button type='info' style={{ margin: 5 }} onClick={() => { stopSamplerAll() }}   >Pause</Button>
+                    <Button type='lightdark' style={{ margin: 5 }} onClick={() => { stopSamplerAll() }}   >Pause</Button>
                 </Row>
 
                 <ProgressBarTrain progress={Math.round(100 * (config.questionNumber.cur ? (progress.finishedNum / config.questionNumber.cur) : 0))} ></ProgressBarTrain>

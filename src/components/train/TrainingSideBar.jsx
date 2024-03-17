@@ -11,7 +11,7 @@ import { easyConfig, mediumConfig, hardConfig } from '../../utils/trainConfig';
 import { ConfigComponent } from './FillConfig';
 import { TrainResult } from './TrainResult';
 import { generateInitProgress } from '../../utils/progressConfig';
-import { stopSamplerAll } from '../playSound/playSingle';
+import { stopSamplerAll } from '../playSound/playFunction';
 
 
 const { Header, Content, Sider } = Layout;

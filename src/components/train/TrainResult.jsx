@@ -83,7 +83,7 @@ export const TrainResult = () => {
                     </Col>
 
                     <Col style={{textAlign: 'center'}} key="correct data points comment button " span={24}>
-                        <Button   style={{margin: 5,  verticalAlign: 'middle', }} type={"primary"} onClick={() => {console.log("sfd"); setProgressInfos([...progressInfos].reverse())}}>Reverse display order</Button>
+                        <Button   style={{margin: 5,  verticalAlign: 'middle', }} type={"primary"} onClick={() => {setProgressInfos([...progressInfos].reverse())}}>Reverse display order</Button>
                     
                     </Col>
 

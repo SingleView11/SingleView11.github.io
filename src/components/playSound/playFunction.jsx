@@ -60,40 +60,66 @@ const sampler = new Tone.Sampler({
 let oneSoundSamplerToReleaseTimeOutIds = []
 
 export const stopSamplerAll = () => {
-    for(let timeId of oneSoundSamplerToReleaseTimeOutIds) {
-        clearTimeout(timeId)
-        timeId = null
-    } 
+    for (let pa of oneSoundSamplerToReleaseTimeOutIds) {
+        clearTimeout(pa.timeId)
+        pa.res()
+        // pa.rej("stopped")
+        pa.timeId = null
+    }
     oneSoundSamplerToReleaseTimeOutIds = []
 
     sampler.releaseAll()
     // for(let i = NOTE_RANGE.min; i <= NOTE_RANGE.max; i++) {
-        // console.log(number2Note(i))
-        // sampler.triggerRelease([number2Note(i)], 0)
+    // console.log(number2Note(i))
+    // sampler.triggerRelease([number2Note(i)], 0)
     // }
     // Tone.Transport.stop()
 }
 
 export const playSoundDemo = () => {
     // sampler.triggerAttackRelease(["C4", "E4", "G4"], 10)
-    
+
     sampler.triggerAttack([randomElement(noteSounds) + "4"], 10)
 }
 
-export const playSoundOnce = (sounds, time) => {
+export const playSoundOnce = async (sounds, time) => {
     // const now = Tone.now()
     sampler.triggerAttack(sounds)
     console.log(sounds)
-    let timeId = setTimeout(()=>{
-        sampler.triggerRelease(sounds)
-    }, (time) * 1000)
-    oneSoundSamplerToReleaseTimeOutIds.push(timeId)
+    return new Promise((res, rej) => {
+        let timeId = setTimeout(() => {
+            sampler.triggerRelease(sounds)
+            res()
+        }, (time) * 1000)
+        oneSoundSamplerToReleaseTimeOutIds.push({ timeId: timeId, rej: rej, res: res })
+    })
+
     // sampler.triggerAttackRelease(sounds, time)
     // sampler.triggerRelease(sounds, time)
 }
 
-export const playSoundMulti = (sounds, time = 1, interval = 1) => {
 
+export const playSoundMulti = async (sounds, time, interval = 1) => {
+    let accuTime = 0
+    let piList = []
+    for (let [index, value] of sounds.entries()) {
+        let curTime = accuTime
+        let timeoutArr = oneSoundSamplerToReleaseTimeOutIds
+        let pi = new Promise((res, rej) => {
+            let timeId = setTimeout(() => {
+                playSoundOnce(value, time).then(()=>{
+                    res()
+                })
+            }, curTime)
+            timeoutArr.push({ timeId: timeId, rej: rej, res: res })
+
+        })
+        accuTime += interval * 1000
+        piList.push(pi)
+    }
+    return Promise.all(piList).then(()=>{
+        // console.log("1111")
+    })
 }
 
 
