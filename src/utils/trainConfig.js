@@ -4,6 +4,7 @@ export const generateConfig = (obj) => {
 
     const { type, soundNames, playForms } = obj
 
+    // speed
     const speedInit = {
         // min and max for range
         min: 40,
@@ -11,31 +12,36 @@ export const generateConfig = (obj) => {
         cur: 120,
     }
 
+    // playForm mode
     const playFormInit = {
         cur: 0,
         options: playForms,
     }
 
+    // prelude mode
     const preludeInit = {
         // usePrelude: false,
         cur: 1,
         options: ["melody", "cadence", "none"]
     }
 
+    // action after choosing wrong ans
     const wrongThenInit = {
         options: ["play wrong note", "silent"],
         cur: 0,
     }
 
+    // action after choosing right ans
     const rightThenInit = {
         options: ["play correct note", "silent"],
         cur: 0,
     }
-
+    
+    // time of note
     const noteBpmInit = {
         min: 0.01,
         max: 10,
-        cur: 1,
+        cur: 2,
     }
 
     const waitIntervalInit = {

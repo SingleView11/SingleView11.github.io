@@ -103,18 +103,21 @@ const findIntervalArr = (name) => {
     return intervalArr
 }
 
-const generateIntervalNoteGroup = (name) => {
+const generateIntervalNoteGroup = (name, config) => {
     let intervalArr = findIntervalArr(name)
     let ok = false
     let noteNums
+    let scaleRange = config.scaleRange.cur
+    let curRange = { min: 12 * (scaleRange.min), max: 12 * (scaleRange.max + 1) }
+   
     while (!ok) {
-        let startNoteNum = randomNumberInRange(NOTE_RANGE)
+        let startNoteNum = randomNumberInRange(curRange)
         noteNums = intervalArr.map(noteNum => {
             return noteNum + startNoteNum;
         })
         ok = true
         for (let [index, value] of noteNums.entries()) {
-            if (value > NOTE_RANGE.max) {
+            if (value > curRange.max || value < curRange.min) {
                 ok = false
             }
         }
@@ -122,7 +125,7 @@ const generateIntervalNoteGroup = (name) => {
     return { noteNums: noteNums, playNotes: noteNums.map(num => number2Note(num)) }
 }
 
-const generateMelodyNoteGroup = (noteNum) => {
+const generateMelodyNoteGroup = (noteNum, config) => {
 
 }
 
@@ -238,7 +241,7 @@ export const genRandomProblem = (config) => {
 
     }
     if (type == 'interval') {
-        let tmpVal = generateIntervalNoteGroup(name)
+        let tmpVal = generateIntervalNoteGroup(name, config)
         playNotes = tmpVal.playNotes
         noteNums = tmpVal.noteNums
         if (playFormName == "All Mixed") {
@@ -261,7 +264,7 @@ export const genRandomProblem = (config) => {
 
     // wait till further implement
     if (type == 'melody') {
-        playNotes = generateIntervalNoteGroup(name)
+        playNotes = generateMelodyNoteGroup(name, config)
         if (playFormName == "Random") {
             // playFormName = randomElement(["Ascend", "Descend", "Ascend & Descend", "Harmonic"])
         }
