@@ -57,25 +57,38 @@ const sampler = new Tone.Sampler({
 // const reverb = new Tone.Reverb(10);
 // sampler.chain(reverb, Tone.Destination);
 
+let oneSoundSamplerToReleaseTimeOutIds = []
+
 export const stopSamplerAll = () => {
-    // sampler.triggerRelease([], 0)[]
+    for(let timeId of oneSoundSamplerToReleaseTimeOutIds) {
+        clearTimeout(timeId)
+        timeId = null
+    } 
+    oneSoundSamplerToReleaseTimeOutIds = []
+
     sampler.releaseAll()
     // for(let i = NOTE_RANGE.min; i <= NOTE_RANGE.max; i++) {
-    //     sampler.triggerAttackRelease([number2Note(i)], "+0")
-
+        // console.log(number2Note(i))
+        // sampler.triggerRelease([number2Note(i)], 0)
     // }
     // Tone.Transport.stop()
 }
 
 export const playSoundDemo = () => {
     // sampler.triggerAttackRelease(["C4", "E4", "G4"], 10)
-
+    
     sampler.triggerAttack([randomElement(noteSounds) + "4"], 10)
 }
 
-export const playSoundOnce = (sounds, time = 1) => {
+export const playSoundOnce = (sounds, time) => {
     // const now = Tone.now()
     sampler.triggerAttack(sounds)
+    console.log(sounds)
+    let timeId = setTimeout(()=>{
+        sampler.triggerRelease(sounds)
+    }, (time) * 1000)
+    oneSoundSamplerToReleaseTimeOutIds.push(timeId)
+    // sampler.triggerAttackRelease(sounds, time)
     // sampler.triggerRelease(sounds, time)
 }
 

@@ -10,7 +10,6 @@ export const playProblem = (obj, config) => {
         }
     */
     if (obj.playForm == 2) {
-        console.log(obj.playNotes)
         stopSamplerAll()
         playSoundOnce(obj.playNotes, config.noteBpm.cur)
     }

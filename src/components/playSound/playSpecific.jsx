@@ -90,7 +90,6 @@ const generateChordNoteGroup = (name, config) => {
             }
         }
     }
-    console.log(noteNums)
     return { noteNums: noteNums, playNotes: noteNums.map(num => number2Note(num)) }
 }
 
