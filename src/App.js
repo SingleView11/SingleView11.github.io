@@ -6,14 +6,15 @@ import HeaderComponent from './components/layout/Header';
 import FooterComponent from './components/layout/Footer';
 import ErrorComponent from './components/layout/ErrorPage';
 import HomeComponent from './components/layout/Home';
-import TrainSideBar from './components/train/TrainingSideBar';
+import TrainGround from './components/train/trainGround';
 
 
 import 'antd-button-color/dist/css/style.css';
 
 import { useState } from 'react';
 import { ConfigContext } from './components/globalStates/ConfigContext';
-import { initialConfig } from './utils/trainConfig';
+import { initialConfig } from './components/configs/trainConfig';
+import { PlayGround } from './components/play/playGround';
 
 const App = () => {
   const [config, setConfig] = useState(initialConfig)
@@ -31,16 +32,10 @@ const App = () => {
         <Routes>
           <Route path="/" element={<HomeComponent />} />
           <Route path="/about" element={<AboutComponent />} />
-          <Route path='/train' element={<TrainSideBar></TrainSideBar>}>
-          </Route>
+          <Route path='/train' element={<TrainGround />} />
 
-          <Route path='/listen' element={<TrainSideBar></TrainSideBar>}>
-
-          </Route>
-
-          <Route path='/test' element={<TrainSideBar></TrainSideBar>}>
-          </Route>
-
+          <Route path='/listen' element={<TrainGround />} />
+          <Route path='/play' element={<PlayGround />} />
           <Route path='*' element={<ErrorComponent />} />
         </Routes>
         <FooterComponent></FooterComponent>

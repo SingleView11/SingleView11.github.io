@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react"
 import { TitleCen } from "../uiItems/titleFunc";
-import { upFirst } from "../../utils/levelTypes";
+import { upFirst } from "../configs/levelTypes";
 import { ConfigContext } from "../globalStates/ConfigContext";
 import { SlideBarProp, ButtonGroupWithFunc, ButtonSelecOne, SlideBarRangeProp } from "../uiItems/BarButtons";
 import { isMelody } from "../playSound/playSpecific";
@@ -21,7 +21,7 @@ const ConfigComponent = () => {
         })
     }
 
-    
+
 
 
     return (
@@ -33,7 +33,7 @@ const ConfigComponent = () => {
 
 
             <ButtonGroupWithFunc config={config} setConfig={setConfig} propName={"sounds"} disableCtl={false} tagName={"playable"} clickFunc={soundChoose} ></ButtonGroupWithFunc>
-           
+
             <ButtonSelecOne config={config} setConfig={setConfig} propName={"playForm"} propTitle={"Mode"}></ButtonSelecOne>
             <SlideBarProp config={config} setConfig={setConfig} propName={"questionNumber"} propTitle={"Question number"} sliderStep={5} ></SlideBarProp>
             <SlideBarRangeProp config={config} setConfig={setConfig} propName={"scaleRange"} propTitle={"Scale Range"} ></SlideBarRangeProp>

@@ -75,7 +75,7 @@ const TrainArea = () => {
     const playCurProblem = async (play = true) => {
         // playSoundOnce([curProblem], config)
         if (!play) return
-        await playProblem(curProblem, config).then(()=>{
+        await playProblem(curProblem, config).then(() => {
             // console.log("")
         })
     }
@@ -98,6 +98,31 @@ const TrainArea = () => {
 
     }, [])
 
+    useEffect(() => {
+        if (ansStatus == 1) {
+
+            playCurProblem(config.rightThen.cur == 0).then(() => {
+
+
+                if (config.questionNumber.cur && progress.finishedNum >= config.questionNumber.cur - 1) {
+                    setTimeout(() => {
+                        endTrain()
+                    }, 2000)
+                    return
+                }
+
+                // passing outdated data
+                setTimeout(() => {
+                    startNewProblem(progress)
+                }, config.waitInterval.cur * 1000)
+
+
+            }).catch((e) => {
+                console.log(e)
+            })
+        }
+    }, [ansStatus])
+
     const correctAns = (sound) => {
         if (ansStatus == -1) {
             setProgress({
@@ -109,7 +134,7 @@ const TrainArea = () => {
             })
 
         }
-        else if(ansStatus == 0) {
+        else if (ansStatus == 0) {
             setProgress({
                 ...progress,
                 finishedNum: progress.finishedNum + 1,
@@ -117,42 +142,23 @@ const TrainArea = () => {
         }
         setAnsStatus(1)
 
-        playCurProblem(config.rightThen.cur == 0).then(() => {
-            
-
-            if (config.questionNumber.cur && progress.finishedNum >= config.questionNumber.cur - 1) {
-                setTimeout(() => {
-                    endTrain()
-                }, 2000)
-                return
-            }
-
-            // passing outdated data
-            setTimeout(() => {
-                startNewProblem(progress)
-            }, config.waitInterval.cur * 1000)
-
-
-        }).catch((e)=>{
-            console.log(e)
-        })
 
     }
 
     const wrongAns = (soundFalse) => {
         let sound = curProblem.name
-            playWrongSoundWithBase(curProblem, soundFalse, config, config.wrongThen.cur == 0).then(()=> {
-                if (ansStatus == -1) {
-                    setProgress({
-                        ...progress,
-                        wrongNum: progress.wrongNum + 1,
-                        wrongSounds: progress.wrongSounds.set(sound, (progress.wrongSounds.get(sound) ?? 0) + 1),
-                        chosen: true,
-                    })
-                    setAnsStatus(0)
-                }
-            })
-        
+        playWrongSoundWithBase(curProblem, soundFalse, config, config.wrongThen.cur == 0).then(() => {
+            if (ansStatus == -1) {
+                setProgress({
+                    ...progress,
+                    wrongNum: progress.wrongNum + 1,
+                    wrongSounds: progress.wrongSounds.set(sound, (progress.wrongSounds.get(sound) ?? 0) + 1),
+                    chosen: true,
+                })
+                setAnsStatus(0)
+            }
+        })
+
 
     }
 

@@ -1,5 +1,6 @@
-import { intervalSounds, melodySounds, chordSounds, noteSounds } from './musicTerms'
-import { intervalPlayForms, melodyPlayForms, chordPlayForms, notePlayForms } from './musicTerms'
+import { TitleCen } from '../uiItems/titleFunc'
+import { intervalSounds, melodySounds, chordSounds, noteSounds } from '../../utils/musicTerms'
+import { intervalPlayForms, melodyPlayForms, chordPlayForms, notePlayForms } from '../../utils/musicTerms'
 export const generateConfig = (obj) => {
 
     const { type, soundNames, playForms } = obj
@@ -66,6 +67,11 @@ export const generateConfig = (obj) => {
         cur: 20,
     }
 
+    const selectedModeInit = {
+        cur: 0,
+        options: ["train", "listen", "play"]
+    }
+
 
     const soundsInit = soundNames.map((soundName, index) => {
         // 12 modes
@@ -95,6 +101,8 @@ export const generateConfig = (obj) => {
         scaleRange: scaleRangeInit,
 
         type: type,
+
+        selectedMode: selectedModeInit,
     }
 
     return initConfig;

@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Button } from 'antd';
 
 // const choices = ["interval", "note", "chord", "melody"]
-const choices = ["interval", "note", "chord"]
+const TRAIN_CHOICES = ["interval", "note", "chord"]
 const levels = ["Easy", "Medium", "Hard", "Extreme", "Custom"]
 
 // generate subnav item object 
@@ -11,7 +11,7 @@ export function upFirst(str) {
     return str.charAt(0).toUpperCase() + str.slice(1)
 }
 
-export const generateSubNavFrom = (closeSideBarFunc) => {
+export const generateSubNavFrom = (closeSideBarFunc, choices = TRAIN_CHOICES) => {
     return choices.map((choice, index) => {
         return {
             key: choice,

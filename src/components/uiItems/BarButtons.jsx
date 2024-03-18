@@ -2,7 +2,7 @@ import React from "react"
 import Button from "antd-button-color"
 import { Col, Row, Slider, InputNumber } from 'antd';
 import { TitleCen } from "./titleFunc";
-import { upFirst } from "../../utils/levelTypes";
+import { upFirst } from "../configs/levelTypes";
 
 export const SlideBarRangeProp = ({ config, setConfig, propName, propTitle, sliderStep = 1 }) => {
     let cfg = {
@@ -10,7 +10,7 @@ export const SlideBarRangeProp = ({ config, setConfig, propName, propTitle, slid
     }
 
     const propChoose = (value) => {
-        
+
         cfg[propName] = {
             ...cfg[propName],
             cur: {
