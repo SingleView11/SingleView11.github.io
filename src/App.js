@@ -35,29 +35,14 @@ const App = () => {
           <Route path="/" element={<HomeComponent />} />
           <Route path="/about" element={<AboutComponent />} />
           <Route path='/train' element={<TrainSideBar></TrainSideBar>}>
-            <Route path="chord" element={<TrainChord></TrainChord>} />
-            <Route path="interval" element={<TrainInterval></TrainInterval>} />
-            <Route index element={<TrainInterval></TrainInterval>} />
-            <Route path="note" element={<TrainNote></TrainNote>} />
-            {/* <Route path="melody" element={<TrainMelody></TrainMelody>} /> */}
           </Route>
 
           <Route path='/listen' element={<TrainSideBar></TrainSideBar>}>
             <Route index element={<TrainInterval></TrainInterval>} />
 
-            <Route path="chord" element={<TrainChord></TrainChord>} />
-            <Route path="interval" element={<TrainInterval></TrainInterval>} />
-            <Route path="note" element={<TrainNote></TrainNote>} />
-            {/* <Route path="melody" element={<TrainMelody></TrainMelody>} /> */}
           </Route>
 
           <Route path='/test' element={<TrainSideBar></TrainSideBar>}>
-            <Route path="chord" element={<TrainChord></TrainChord>} />
-            <Route path="interval" element={<TrainInterval></TrainInterval>} />
-            <Route element={<TrainInterval></TrainInterval>} />
-
-            <Route path="note" element={<TrainNote></TrainNote>} />
-            {/* <Route path="melody" element={<TrainMelody></TrainMelody>} /> */}
           </Route>
 
           <Route path='*' element={<ErrorComponent />} />

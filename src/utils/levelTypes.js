@@ -17,8 +17,8 @@ export const generateSubNavFrom = (closeSideBarFunc) => {
             key: choice,
             path: choice,
             // icon: React.createElement(icon), 
-            label:
-                <Link onClick={(e) => closeSideBarFunc(e, choice)} to={choice}> {upFirst(choice)}</Link>
+            label: upFirst(choice),
+            onClick: (e) => closeSideBarFunc(e, choice)
             // children: levels.map((level, j) => {
             //     const subKey = index * 4 + j + 1;
             //     return {
