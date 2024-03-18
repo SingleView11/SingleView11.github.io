@@ -35,6 +35,7 @@ const melodySounds = ["C", "C#", "D", "D#",
 
 
 
+
 const intervalPlayForms = ["Ascend", "Descend", "Ascend & Descend", "Harmonic", "All Mixed"]
 const chordPlayForms = ["Harmonic", "Ascend", "Descend", "Ascend & Descend", "All Mixed"]
 const notePlayForms = ["Single"]
@@ -42,3 +43,5 @@ const melodyPlayForms = ["Ascend", "Descend", "Random"]
 
 export { intervalSounds, chordSounds, noteSounds, melodySounds }
 export { intervalPlayForms, chordPlayForms, notePlayForms, melodyPlayForms, chordForms }
+
+export const modes = ["Major"]

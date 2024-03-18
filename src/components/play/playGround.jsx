@@ -10,9 +10,10 @@ import { TitleCen } from '../uiItems/titleFunc';
 import { PlayConfigComponent } from './playConfigUI';
 import { easyConfig, hardConfig, mediumConfig } from '../configs/trainConfig';
 import { ConfigContext } from '../globalStates/ConfigContext';
+import { PlayCore } from './playCore';
 
 
-const playContext = React.createContext(null);
+export const playContext = React.createContext(null);
 
 const { Header, Content, Sider } = Layout;
 const { Text, Title } = Typography;
@@ -21,6 +22,7 @@ export const PlayGround = () => {
     const [collapsed, setCollapsed] = useState(true);
     const [playState, setPlayState] = useState(0)
     const [playProject, setPlayProject] = useState(PLAY_CHOICES[0])
+
     const { config, setConfig, trainState, setTrainState, progress, setProgress } = useContext(ConfigContext)
 
 
@@ -137,7 +139,7 @@ export const PlayGround = () => {
 
                     {playState == 0 && <PlayConfigComponent></PlayConfigComponent>}
 
-                    {playState == 1 && playMap.get(playProject)}
+                    {playState == 1 && <PlayCore project={playProject} ></PlayCore>}
 
                     {/* {playState == 2 && <PlayResult></PlayResult>} */}
 

@@ -4,10 +4,16 @@ import { upFirst } from "../configs/levelTypes";
 import { ConfigContext } from "../globalStates/ConfigContext";
 import { SlideBarProp, ButtonGroupWithFunc, ButtonSelecOne, SlideBarRangeProp } from "../uiItems/BarButtons";
 import { isMelody } from "../playSound/playSpecific";
+import { Content } from "antd/es/layout/layout";
+import { theme } from "antd";
 
 
 const ConfigComponent = () => {
     const { config, setConfig, } = useContext(ConfigContext)
+    const {
+        token: { colorBgContainer, borderRadiusLG },
+    } = theme.useToken();
+
     const soundChoose = (e) => {
         setConfig({
             ...config,
@@ -25,7 +31,16 @@ const ConfigComponent = () => {
 
 
     return (
-        <>
+        <Content
+                        style={{
+                            margin: 0,
+                            marginTop: 20,
+                            padding: 24,
+                            background: colorBgContainer,
+                            borderRadius: borderRadiusLG,
+                        }}
+                    >
+
             {/* Buttons of Sounds */}
 
             <TitleCen text={`${upFirst(config.type)} Selection`}></TitleCen>
@@ -46,7 +61,7 @@ const ConfigComponent = () => {
             <ButtonSelecOne config={config} setConfig={setConfig} propName={"wrongThen"} propTitle={"Action after wrong"}></ButtonSelecOne>
             <ButtonSelecOne config={config} setConfig={setConfig} propName={"rightThen"} propTitle={"Action after correct"}></ButtonSelecOne>
             {config[""]}
-        </>
+        </Content>
     )
 }
 
