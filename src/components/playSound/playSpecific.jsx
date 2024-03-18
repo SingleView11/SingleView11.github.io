@@ -2,6 +2,7 @@ import { randomElement, randomNumberInRange, getRandomIntInclusive } from "../..
 import { intervalSounds, noteSounds, chordSounds, chordForms } from "../../utils/musicTerms"
 import { playProblem } from "./playProblem"
 import { playSoundOnce } from "./playFunction"
+import { chordArrs } from "../../utils/musicTerms"
 
 export const NOTE_RANGE = { min: 0, max: 96 }
 
@@ -15,8 +16,9 @@ const arr2Str = (arr) => {
 }
 
 // 0 for C0, 12 for C1, ... 96 for C8(max)
-export const number2Note = (num) => {
+export const number2Note = (num, needNum = true) => {
     let scale = Math.floor(num / 12), note = num % 12;
+    if(!needNum) return noteSounds[note]
     return noteSounds[note] + scale;
 }
 
@@ -34,7 +36,7 @@ export const note2NumberFull = (note) => {
     }
 }
 
-const chordForm2chordArr = (chordForm) => {
+export const chordForm2chordArr = (chordForm) => {
     // first convert all note to number
     const chordArr = []
     for (let i = 0; i < chordForm.length; i++) {
@@ -60,7 +62,6 @@ const chordForm2chordArr = (chordForm) => {
     return chordArr
 }
 
-const chordArrs = chordForms.map(chordForm => chordForm2chordArr(chordForm))
 
 const generateSingleNoteGroup = () => {
     const noteNumber = randomNumberInRange(NOTE_RANGE)

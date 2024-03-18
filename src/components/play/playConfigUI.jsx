@@ -28,7 +28,7 @@ export const PlayConfigComponent = () => {
             {/* <SlideBarRangeProp config={config} setConfig={setConfig} propName={"scaleRange"} propTitle={"Scale Range"} ></SlideBarRangeProp> */}
             {/* <SlideBarProp config={config} setConfig={setConfig} propName={"waitInterval"} propTitle={"Sound Interval"} sliderStep={0.01} ></SlideBarProp> */}
 
-            {isMelody(config) && <SlideBarProp config={config} setConfig={setConfig} propName={"speed"} propTitle={"Note Interval"} sliderStep={0.01} ></SlideBarProp>}
+            {isMelody(config) && <SlideBarProp config={config} setConfig={setConfig} propName={"speed"} propTitle={"Note Interval(Unit 1)"} sliderStep={0.01} ></SlideBarProp>}
             <SlideBarProp config={config} setConfig={setConfig} propName={"noteBpm"} propTitle={"Note length"} sliderStep={0.01} ></SlideBarProp>
             {/* <ButtonSelecOne config={config} setConfig={setConfig} propName={"prelude"} propTitle={"Prelude"}></ButtonSelecOne> */}
 
