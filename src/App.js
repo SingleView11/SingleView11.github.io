@@ -8,9 +8,6 @@ import ErrorComponent from './components/layout/ErrorPage';
 import HomeComponent from './components/layout/Home';
 import TrainSideBar from './components/train/TrainingSideBar';
 
-import { TrainChord } from './components/train/TrainChord';
-import { TrainInterval } from './components/train/TrainInterval';
-import { TrainNote } from './components/train/TrainNote';
 
 import 'antd-button-color/dist/css/style.css';
 
@@ -38,7 +35,6 @@ const App = () => {
           </Route>
 
           <Route path='/listen' element={<TrainSideBar></TrainSideBar>}>
-            <Route index element={<TrainInterval></TrainInterval>} />
 
           </Route>
 
