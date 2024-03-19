@@ -7,7 +7,7 @@ import Button from 'antd-button-color';
 const { Text, Title } = Typography;
 
 
-export const SelectOptions = (data, key, setData, originalWholeData) => {
+export const SelectOptions = (data, key, setData, originalWholeData, width=100, setFuncCustom = false) => {
     return (
         <>
         <Text style={{margin: 5, fontSize: 16}} >{`  ${upFirst(key)}  `}</Text>
@@ -15,11 +15,14 @@ export const SelectOptions = (data, key, setData, originalWholeData) => {
             key={key}
             defaultValue={data.cur}
             style={{
-                width: 100,
+                width: width,
                 margin: 5,
             }}
             onChange={(value) => { 
-                console.log(value); 
+                if(setFuncCustom) {
+                    setData({value: value, key: key})
+                    return;
+                }
                 const ansData = {...originalWholeData}
                 ansData[key] = {
                     ...data,
@@ -39,7 +42,7 @@ export const SelectOptions = (data, key, setData, originalWholeData) => {
     )
 }
 
-export const SelectGroup = ({para, setPara, buttonInfos}) => {
+export const SelectGroup = ({para, setPara, buttonInfos, minimalWidth = 120, setFuncCustom=false}) => {
     const datas = {
         ...para
     }
@@ -48,8 +51,8 @@ export const SelectGroup = ({para, setPara, buttonInfos}) => {
         <Row justify={'center'}>
         {Object.entries(datas).map(([key, data])=>{
             return (
-                <Col style={{minWidth: 120}} key={key + "in chord choice"}>
-                {SelectOptions(data, key, setPara, para)}
+                <Col style={{minWidth: minimalWidth}} key={key + "in chord choice"}>
+                {SelectOptions(data, key, setPara, para, minimalWidth, setFuncCustom)}
                 </Col>
             ) 
 

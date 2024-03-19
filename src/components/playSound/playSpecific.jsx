@@ -17,6 +17,7 @@ const arr2Str = (arr) => {
 
 // 0 for C0, 12 for C1, ... 96 for C8(max)
 export const number2Note = (num, needNum = true) => {
+    num = clipNoteNum(num)
     let scale = Math.floor(num / 12), note = num % 12;
     if(!needNum) return noteSounds[note]
     return noteSounds[note] + scale;
@@ -28,11 +29,16 @@ export const note2Number = (note) => {
     }
 }
 
+const clipNoteNum = (num) => {
+    if(num > NOTE_RANGE.max) return NOTE_RANGE.max 
+    if(num < NOTE_RANGE.min) return NOTE_RANGE.min
+    return num
+}
 
 export const note2NumberFull = (note) => {
     let nt = note.substr(0, note.length-1)
     for (let [index, val] of noteSounds.entries()) {
-        if (nt == val) return index + 12 * parseInt(note[note.length-1])
+        if (nt == val) return clipNoteNum( index + 12 * parseInt(note[note.length-1]))
     }
 }
 

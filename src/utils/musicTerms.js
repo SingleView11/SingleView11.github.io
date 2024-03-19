@@ -1,4 +1,4 @@
-import { note2Number, number2Note } from "../components/playSound/playSpecific"
+import { note2Number, note2NumberFull, number2Note } from "../components/playSound/playSpecific"
 import { chordForm2chordArr } from "../components/playSound/playSpecific"
 
 const intervalSounds = ["Minor 2nd", "Major 2nd", "Minor 3rd", "Major 3rd",
@@ -71,7 +71,7 @@ export const CHORD_PROG_INIT_PARAS = {
 
 export const CHORD_SINGLE_INIT_PARAS = {
     pos: {
-        options: Array.from(Array(21).keys()).map(t=>t+1),
+        options: Array.from(Array(21).keys()).map(t => t + 1),
         cur: 1,
     },
     time: {
@@ -108,6 +108,52 @@ export const nextInMode = (mode, curNote, key) => {
         bef = note
     }
 
+}
+
+export const getPureNote = (note) => {
+    return number2Note( note2NumberFull(note), false)
+}
+
+// with scale
+export const nextNoteInMode = (mode, startNote, key) => {
+    let pureNote = getPureNote(startNote)
+    let nextPureNote = nextInMode(mode, pureNote, key)
+    nextPureNote += "0"
+    while (note2NumberFull(nextPureNote) < note2NumberFull(startNote)) {
+        nextPureNote = number2Note(note2NumberFull(nextPureNote) + 12)
+    }
+    return nextPureNote
+}
+
+// generate 3 note (a chord) with key, scale, mode, pos info
+export const genChordProblemFromPos = (para, chordInfo) => {
+    const pos = chordInfo.pos.cur;
+    const mode = para.mode.cur
+    const key = para.key.cur
+    const scale = para.scale.cur
+    let rootNote = key + scale
+    let chordStartNote = rootNote
+    for (let i = 1; i < pos; i++) {
+        chordStartNote = nextNoteInMode(mode, chordStartNote, key)
+    }
+    // now just 3-chord in major/minor scale
+    const chords = [chordStartNote]
+    for (let i = 0; i < 2; i++) {
+        let curNote = chords[chords.length - 1]
+        for (let j = 0; j < 2; j++) curNote = nextNoteInMode(mode, curNote, key)
+        chords.push(curNote)
+    }
+    // used when no nextNoteInMode function
+    // let bef = rootNote
+    // for(let [index, value] of chords.entries()) {
+    //     value = value + scale
+    //     while(note2NumberFull(value) < note2NumberFull(bef)) {
+    //         value = number2Note(note2NumberFull(value) + 12)
+    //     }
+    //     chords[index] = value
+    //     bef = value
+    // }
+    return chords
 }
 
 

@@ -1,18 +1,19 @@
 import { useState } from "react"
-import { CHORD_PROG_INIT_PARAS, CHORD_SINGLE_INIT_PARAS, generateDataForChordPara, modes, noteSounds } from "../../utils/musicTerms"
+import { CHORD_PROG_INIT_PARAS, CHORD_SINGLE_INIT_PARAS, genChordProblemFromPos, generateDataForChordPara, modes, noteSounds } from "../../utils/musicTerms"
 import { SelectGroup } from "../uiItems/selectOptions"
 import { Button, Flex, Row, Typography, theme } from "antd"
 import { Card, List } from 'antd';
 import { v4 } from "uuid";
 import { TitleCen } from "../uiItems/titleFunc";
-import { CloseOutlined, InfoOutlined, CaretLeftOutlined, CaretRightOutlined } from '@ant-design/icons';
+import { CloseOutlined, InfoOutlined, CaretLeftOutlined, CaretRightOutlined, EditOutlined } from '@ant-design/icons';
 import { Content } from "antd/es/layout/layout";
 import { stopSamplerAll } from "../playSound/playFunction";
 
 const { Text, Title } = Typography;
 
 
-const ChordProgressionUIList = ({ data, deleteFunc, infoFunc, moveLeft, moveRight }) => (
+const ChordProgressionUIList = ({ data, deleteFunc, infoFunc, moveLeft, moveRight, editFunc }) => (
+  
   <List
     grid={{
       xs: Flex,
@@ -26,11 +27,18 @@ const ChordProgressionUIList = ({ data, deleteFunc, infoFunc, moveLeft, moveRigh
     locale={{ emptyText: 'Empty' }}
     renderItem={(item) => (
       <List.Item style={{ margin: 5, }}>
-        <Card bodyStyle={{ padding: 0, textAlign: "center" }} title={<Text style={{ fontSize: 16 }}>{generateDataForChordPara(item)}</Text>} >
-          <Button shape="circle" style={{ margin: 5 }} icon={<InfoOutlined />} size="small" type="info" name={item.key} onClick={infoFunc}></Button>
+        <Card bodyStyle={{ padding: 0, textAlign: "center" }}
+         title={<Text style={{ fontSize: 16 }}>{
+          <SelectGroup minimalWidth={50} para={CHORD_SINGLE_INIT_PARAS} 
+          setPara={(e)=>{editFunc(e, item.key)}}  setFuncCustom={true}
+           ></SelectGroup>
+        //  generateDataForChordPara(item)
+         }</Text>} >
+          <Button shape="circle" style={{ margin: 5 }} icon={<InfoOutlined />} size="small" type="success" name={item.key} onClick={infoFunc}></Button>
+          {/* <Button shape="circle" style={{ margin: 5 }} icon={<EditOutlined />} size="small" type="info" name={item.key} onClick={infoFunc}></Button> */}
           <Button shape="circle" style={{ margin: 5 }} icon={<CaretLeftOutlined />} size="small" type="primary" name={item.key} onClick={moveLeft}></Button>
           <Button shape="circle" style={{ margin: 5 }} icon={<CaretRightOutlined />} size="small" type="primary" name={item.key} onClick={moveRight}></Button>
-          <Button shape="circle" style={{ margin: 5 }} icon={<CloseOutlined />} size="small" type="warning" name={item.key} onClick={deleteFunc}></Button>
+          <Button shape="circle" style={{ margin: 5 }} icon={<CloseOutlined />} size="small" danger type="primary" name={item.key} onClick={deleteFunc}></Button>
         </Card>
       </List.Item>
     )}
@@ -97,9 +105,37 @@ export const PlayChordProg = () => {
   const showChordInfo = (e) => {
     console.log(e.currentTarget)
   }
+
+  const playChordProgression = () => {
+    chordList.forEach(chordData=> {
+      let chordVal = genChordProblemFromPos(para, chordData.info)
+      console.log(chordVal)
+    })
+  }
+
+  const editChordPos = (e, chordKey) => {
+    const newList = [...chordList]
+    newList.map(chord=>{
+      if(chord.key != chordKey) return chord;
+      let ans = {
+        ...chord, 
+        
+      }
+      ans.info[e.key] = {
+        ...ans.info[e.key],
+        cur: e.value,
+      }
+      return ans
+    })
+    setChordList(newList)
+  }
+
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
+
+
+
   return (
     <>
       <Content
@@ -135,7 +171,7 @@ export const PlayChordProg = () => {
         <TitleCen level={3} text={"Chord List"}></TitleCen>
         <ChordProgressionUIList data={chordList} configParas={para}
           deleteFunc={deleteListChord} infoFunc={showChordInfo}
-          moveLeft={moveLeft} moveRight={moveRight}
+          moveLeft={moveLeft} moveRight={moveRight} editFunc={editChordPos}
         ></ChordProgressionUIList>
       </Content>
 
@@ -149,7 +185,7 @@ export const PlayChordProg = () => {
         }}
       >
         <Row justify="center" style={{ margin: 0 }}>
-          <Button type='success' style={{ margin: 5 }} onClick={() => { }}   >Play</Button>
+          <Button type='success' style={{ margin: 5 }} onClick={playChordProgression}   >Play</Button>
           <Button type='primary' style={{ margin: 5 }} onClick={() => { }}   >Loop</Button>
           <Button type='lightdark' style={{ margin: 5 }} onClick={() => { stopSamplerAll() }}   >Pause</Button>
         </Row>
