@@ -8,9 +8,9 @@ export const generateConfig = (obj) => {
     // speed, interval second of separate sounds
     const speedInit = {
         // min and max for range
-        min: 0.1,
-        max: 5,
-        cur: 1,
+        min: 0,
+        max: 3,
+        cur: 0,
     }
 
     // playForm mode
@@ -212,9 +212,9 @@ for (let i = 0; i < chordDiff.length; i++) {
 }
 
 
-export const easyConfig = alterConfigDifficulty(1, 0, 0, 1, diffMap, { min: 4, max: 4 })
-export const mediumConfig = alterConfigDifficulty(2, 1, 2, 2, diffMap, { min: 3, max: 5 })
-export const hardConfig = alterConfigDifficulty(0.5, 2, 1, 3, diffMap, { min: 0, max: 7 })
+export const easyConfig = alterConfigDifficulty(1, 0, 3, 1, diffMap, { min: 4, max: 4 })
+export const mediumConfig = alterConfigDifficulty(0.5, 1, 2, 2, diffMap, { min: 3, max: 5 })
+export const hardConfig = alterConfigDifficulty(0, 2, 1, 3, diffMap, { min: 0, max: 7 })
 
 
 const configMap = new Map();

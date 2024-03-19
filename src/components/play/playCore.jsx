@@ -1,7 +1,7 @@
 import { Row, theme } from "antd";
 import { Content } from "antd/es/layout/layout"
 import { ChooseModal, HintModal } from "../uiItems/HintModal";
-import { useContext } from "react";
+import { useContext, useRef } from "react";
 import { playContext } from "./playGround";
 import { Outlet } from "react-router-dom";
 import { playMap } from "../configs/playConfig";
@@ -11,9 +11,14 @@ export const PlayCore = ({project}) => {
         token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
 
+
+
     const {playState, setPlayState} = useContext(playContext)
+  const {stateRef} = useContext(playContext)
+
 
     const endTrain = () => {
+        stateRef.current = false
         setPlayState(0)
     }
 

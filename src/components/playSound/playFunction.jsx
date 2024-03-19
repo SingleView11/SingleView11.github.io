@@ -85,7 +85,7 @@ export const playSoundDemo = () => {
 export const playSoundOnce = async (sounds, time) => {
     // const now = Tone.now()
     sampler.triggerAttack(sounds)
-    console.log(sounds)
+    // console.log(sounds)
     return new Promise((res, rej) => {
         let timeId = setTimeout(() => {
             sampler.triggerRelease(sounds)
@@ -99,22 +99,30 @@ export const playSoundOnce = async (sounds, time) => {
 }
 
 
-export const playSoundMulti = async (sounds, time, interval = 1) => {
+export const playSoundMulti = async (sounds, times = 1, interval = 1) => {
     let accuTime = 0
     let piList = []
     for (let [index, value] of sounds.entries()) {
         let curTime = accuTime
         let timeoutArr = oneSoundSamplerToReleaseTimeOutIds
+        let playTime = times;
+        if(Array.isArray(times)) playTime = times[Math.min(times.length-1, index)]
+        let nextTime = interval;
+        if( Array.isArray(interval)) {
+            nextTime = interval[Math.min(index, interval.length-1)]
+        } 
         let pi = new Promise((res, rej) => {
             let timeId = setTimeout(() => {
-                playSoundOnce(value, time).then(()=>{
-                    res()
+                playSoundOnce(value, playTime).then(()=>{
+                    setTimeout(()=> { res()}, 1000 * nextTime)
                 })
             }, curTime)
             timeoutArr.push({ timeId: timeId, rej: rej, res: res })
 
         })
-        accuTime += interval * 1000
+        
+        nextTime += playTime
+        accuTime += nextTime * 1000
         piList.push(pi)
     }
     return Promise.all(piList).then(()=>{

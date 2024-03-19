@@ -24,13 +24,16 @@ export const SelectOptions = (data, key, setData, originalWholeData, width=100, 
                     return;
                 }
                 const ansData = {...originalWholeData}
+                // const ansData = originalWholeData
                 ansData[key] = {
                     ...data,
                     cur: value
                 }
                 setData(
                     ansData
-                ) }}
+                )
+            
+            }}
             options={data.options.map((t) => {
                 return {
                     label: t,

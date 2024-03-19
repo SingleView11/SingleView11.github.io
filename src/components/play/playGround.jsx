@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons';
 import { Space, Layout, Menu, theme, Typography } from 'antd';
 import Button from "antd-button-color";
@@ -20,21 +20,26 @@ const { Text, Title } = Typography;
 
 export const PlayGround = () => {
     const [collapsed, setCollapsed] = useState(true);
+
+    // 0 for begin and 1 for playing
     const [playState, setPlayState] = useState(0)
     const [playProject, setPlayProject] = useState(PLAY_CHOICES[0])
+      const stateRef = useRef()
+
 
     const { config, setConfig, trainState, setTrainState, progress, setProgress } = useContext(ConfigContext)
 
 
     const items2 = generateSubNavFrom((e, choice) => {
         setCollapsed(true);
-        setPlayProject(playMap.get(choice))
+        console.log(choice)
+        
+        setPlayProject(choice)
     }, PLAY_CHOICES);
 
     const startPlaying = () => {
         stopSamplerAll()
         setPlayState(1)
-        console.log(playProject)
     }
 
     const {
@@ -47,6 +52,7 @@ export const PlayGround = () => {
         <playContext.Provider value={{
             playState: playState,
             setPlayState: setPlayState,
+            stateRef: stateRef,
         }}>
         <Layout>
             <Layout>

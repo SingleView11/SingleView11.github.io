@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useContext, useEffect, useRef, useState } from "react"
 import { CHORD_PROG_INIT_PARAS, CHORD_SINGLE_INIT_PARAS, genChordProblemFromPos, generateDataForChordPara, modes, noteSounds } from "../../utils/musicTerms"
 import { SelectGroup } from "../uiItems/selectOptions"
 import { Button, Flex, Row, Typography, theme } from "antd"
@@ -7,13 +7,15 @@ import { v4 } from "uuid";
 import { TitleCen } from "../uiItems/titleFunc";
 import { CloseOutlined, InfoOutlined, CaretLeftOutlined, CaretRightOutlined, EditOutlined } from '@ant-design/icons';
 import { Content } from "antd/es/layout/layout";
-import { stopSamplerAll } from "../playSound/playFunction";
+import { playSoundMulti, stopSamplerAll } from "../playSound/playFunction";
+import { ConfigContext } from "../globalStates/ConfigContext";
+import { playContext } from "./playGround";
 
 const { Text, Title } = Typography;
 
 
 const ChordProgressionUIList = ({ data, deleteFunc, infoFunc, moveLeft, moveRight, editFunc }) => (
-  
+
   <List
     grid={{
       xs: Flex,
@@ -28,12 +30,12 @@ const ChordProgressionUIList = ({ data, deleteFunc, infoFunc, moveLeft, moveRigh
     renderItem={(item) => (
       <List.Item style={{ margin: 5, }}>
         <Card bodyStyle={{ padding: 0, textAlign: "center" }}
-         title={<Text style={{ fontSize: 16 }}>{
-          <SelectGroup minimalWidth={50} para={CHORD_SINGLE_INIT_PARAS} 
-          setPara={(e)=>{editFunc(e, item.key)}}  setFuncCustom={true}
-           ></SelectGroup>
-        //  generateDataForChordPara(item)
-         }</Text>} >
+          title={<Text style={{ fontSize: 16 }}>{
+            <SelectGroup minimalWidth={50} para={item.info}
+              setPara={(e) => { editFunc(e, item.key) }} setFuncCustom={true}
+            ></SelectGroup>
+            //  generateDataForChordPara(item)
+          }</Text>} >
           <Button shape="circle" style={{ margin: 5 }} icon={<InfoOutlined />} size="small" type="success" name={item.key} onClick={infoFunc}></Button>
           {/* <Button shape="circle" style={{ margin: 5 }} icon={<EditOutlined />} size="small" type="info" name={item.key} onClick={infoFunc}></Button> */}
           <Button shape="circle" style={{ margin: 5 }} icon={<CaretLeftOutlined />} size="small" type="primary" name={item.key} onClick={moveLeft}></Button>
@@ -52,11 +54,24 @@ const info2ChordData = (para) => {
 }
 
 export const PlayChordProg = () => {
+  const { config, setConfig } = useContext(ConfigContext)
+  const {stateRef} = useContext(playContext)
+
   const [para, setPara] = useState(CHORD_PROG_INIT_PARAS)
   const [chordPara, setChordPara] = useState(CHORD_SINGLE_INIT_PARAS)
-  const [chordList, setChordList] = useState([])
+  let [chordList, setChordList] = useState([])
+  let [loop, setLoop] = useState(true)
+
+  const chordStateRef = useRef()
+
+  useEffect(() => {
+    chordStateRef.chordList = [...chordList]
+    chordStateRef.para = {...para}
+  }, [para, chordList]);
+
   const addListChord = () => {
     const newListData = [...chordList, info2ChordData({ ...chordPara })]
+    console.log(newListData)
     setChordList(newListData)
   }
   const deleteListChord = (e) => {
@@ -68,6 +83,7 @@ export const PlayChordProg = () => {
     })
     setChordList(newListData)
   }
+  
   const swapArr = (arr, i1, i2) => {
     let tmp = arr[i1]
     arr[i1] = arr[i2]
@@ -106,20 +122,54 @@ export const PlayChordProg = () => {
     console.log(e.currentTarget)
   }
 
-  const playChordProgression = () => {
-    chordList.forEach(chordData=> {
-      let chordVal = genChordProblemFromPos(para, chordData.info)
-      console.log(chordVal)
+  const playChordWithConfig = async () => {
+    let chords = chordStateRef.chordList, paras = chordStateRef.para
+    console.log(paras)
+    if(chords.length < 1) return
+    let chordSounds = chords.map(chordData => {
+      return genChordProblemFromPos(paras, chordData.info)
     })
+    let chordTimes = chords.map(chordData => {
+      return chordData.info.time.cur
+    })  
+    // console.log(chordSounds)
+    // console.log(chordTimes)
+    // console.log(loop)
+    await playSoundMulti(chordSounds, chordTimes.map(t=>{
+      return t * config.noteBpm.cur
+    }) , config.speed.cur)
+    
+
+  }
+
+  const playChordProgression = async () => {
+    stopAll()
+    // chordList.forEach(chordData=> {
+    //   let chordVal = genChordProblemFromPos(para, chordData.info)
+    //   console.log(chordVal)
+    // })
+    stateRef.current = true
+    await playChordWithConfig()
+    while (loop && stateRef.current  ) {
+      if(chordStateRef.chordList.length < 1) break
+      await playChordWithConfig()
+    } 
+
+  }
+
+
+  const stopAll = () => {
+    stateRef.current = false
+    stopSamplerAll()
   }
 
   const editChordPos = (e, chordKey) => {
     const newList = [...chordList]
-    newList.map(chord=>{
-      if(chord.key != chordKey) return chord;
+    newList.map(chord => {
+      if (chord.key != chordKey) return chord;
       let ans = {
-        ...chord, 
-        
+        ...chord,
+
       }
       ans.info[e.key] = {
         ...ans.info[e.key],
@@ -127,6 +177,7 @@ export const PlayChordProg = () => {
       }
       return ans
     })
+    // console.log(chordList)
     setChordList(newList)
   }
 
@@ -148,7 +199,7 @@ export const PlayChordProg = () => {
         }}
       >
         <TitleCen level={3} text={"Global Chord Config"}></TitleCen>
-        <SelectGroup para={para} setPara={setPara}  ></SelectGroup>
+        <SelectGroup para={para} setPara={setPara} setFuncCustom={false}  ></SelectGroup>
 
         <TitleCen level={3} text={"Add Single Chord"}></TitleCen>
         <SelectGroup para={chordPara} setPara={setChordPara} buttonInfos={
@@ -186,8 +237,15 @@ export const PlayChordProg = () => {
       >
         <Row justify="center" style={{ margin: 0 }}>
           <Button type='success' style={{ margin: 5 }} onClick={playChordProgression}   >Play</Button>
-          <Button type='primary' style={{ margin: 5 }} onClick={() => { }}   >Loop</Button>
-          <Button type='lightdark' style={{ margin: 5 }} onClick={() => { stopSamplerAll() }}   >Pause</Button>
+          <Button type={loop ? 'primary' : 'default'} style={{ margin: 5 }} onClick={() => {
+            
+            let origin = loop
+            loop = !origin
+            setLoop(!origin)
+          }}   >Loop</Button>
+          <Button type='lightdark' style={{ margin: 5 }} onClick={() => {
+            stopAll()
+          }}   >Pause</Button>
         </Row>
       </Content>
 
