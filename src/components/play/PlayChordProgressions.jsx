@@ -31,7 +31,7 @@ const ChordProgressionUIList = ({ data, deleteFunc, infoFunc, moveLeft, moveRigh
       <List.Item style={{ margin: 5, }}>
         <Card bodyStyle={{ padding: 0, textAlign: "center" }}
           title={<Text style={{ fontSize: 16 }}>{
-            <SelectGroup minimalWidth={50} para={item.info}
+            <SelectGroup minimalWidth={70} para={item.info}
               setPara={(e) => { editFunc(e, item.key) }} setFuncCustom={true}
             ></SelectGroup>
             //  generateDataForChordPara(item)
@@ -123,6 +123,7 @@ export const PlayChordProg = () => {
   }
 
   const playChordWithConfig = async () => {
+    stopSamplerAll()
     let chords = chordStateRef.chordList, paras = chordStateRef.para
     console.log(paras)
     if(chords.length < 1) return
