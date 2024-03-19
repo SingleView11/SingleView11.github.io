@@ -39,16 +39,14 @@ export const SelectOptions = (data, key, setData, originalWholeData) => {
     )
 }
 
-export const SelectGroup = ({para, setPara, buttonInfo}) => {
+export const SelectGroup = ({para, setPara, buttonInfos}) => {
     const datas = {
         ...para
     }
     return (
-        <Row >
+        <>
+        <Row justify={'center'}>
         {Object.entries(datas).map(([key, data])=>{
-            
-
-            console.log(data, key)
             return (
                 <Col style={{minWidth: 120}} key={key + "in chord choice"}>
                 {SelectOptions(data, key, setPara, para)}
@@ -56,10 +54,15 @@ export const SelectGroup = ({para, setPara, buttonInfo}) => {
             ) 
 
         })}
-        <Col style={{minWidth: 120, margin: 5}}>
-            <Button type={buttonInfo.type} onClick={buttonInfo.clickFunc}>{buttonInfo.name}</Button>
-        </Col>
+        {buttonInfos &&
+        buttonInfos.map(buttonInfo => {
+            return <Col key={buttonInfo.name + "button"} style={{ margin: 5}}>
+           {buttonInfo && <Button type={buttonInfo.type} onClick={buttonInfo.clickFunc}>{buttonInfo.name}</Button>}
+        </Col>}
+        )}
+        
         
         </Row>
+        </>
     )
 }

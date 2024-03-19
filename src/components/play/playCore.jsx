@@ -20,18 +20,10 @@ export const PlayCore = ({project}) => {
     return (
         <>
 
-            <Content
-                style={{
-                    margin: 0,
-                    marginTop: 20,
-                    padding: 24,
-                    background: colorBgContainer,
-                    borderRadius: borderRadiusLG,
-                }}
-            >
+            
                 {playMap.get(project)}
                 {/* playMap.get(project) */}
-            </Content>
+            
 
             <Content
                 style={{

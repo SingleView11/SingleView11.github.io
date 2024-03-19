@@ -63,16 +63,28 @@ export const CHORD_PROG_INIT_PARAS = {
         options: modes,
         cur: "Major",
     },
+    // pos: {
+    //     options: [1, 2, 3, 4, 5, 6, 7],
+    //     cur: 1,
+    // }
+}
+
+export const CHORD_SINGLE_INIT_PARAS = {
     pos: {
-        options: [1, 2, 3, 4, 5, 6, 7],
+        options: Array.from(Array(21).keys()).map(t=>t+1),
+        cur: 1,
+    },
+    time: {
+        options: [0.25, 0.33, 0.5, 1, 2, 4],
         cur: 1,
     }
 }
 
 export const generateDataForChordPara = (chordData) => {
-    const info = chordData.info
+    const pos = chordData.info.pos.cur
+    const time = chordData.info.time.cur
     // console.log(nextInMode(info.mode.cur, info.key.cur, info.key.cur))
-    return "" + info
+    return `Pos ${pos} Time ${time}`
 }
 
 const MAJOR_MODE = ["C", "D", "E", "F", "G", "A", "B"]
