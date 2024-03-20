@@ -43,7 +43,7 @@ const chordPlayForms = ["Harmonic", "Ascend", "Descend", "Ascend & Descend", "Al
 const notePlayForms = ["Single"]
 const melodyPlayForms = ["Ascend", "Descend", "Random"]
 
-export const modes = ["Major"]
+export const modes = ["Major", "Minor"]
 
 // chord progressions
 
@@ -88,8 +88,10 @@ export const generateDataForChordPara = (chordData) => {
 }
 
 const MAJOR_MODE = ["C", "D", "E", "F", "G", "A", "B"]
+const MINOR_MODE = ["C", "D", "D#", "F", "G", "G#", "A#"]
 const modeMap = new Map()
 modeMap.set("Major", MAJOR_MODE)
+modeMap.set("Minor", MINOR_MODE)
 
 // next note of current note in some scale; only note, no scale involvde
 export const nextInMode = (mode, curNote, key) => {
@@ -111,7 +113,7 @@ export const nextInMode = (mode, curNote, key) => {
 }
 
 export const getPureNote = (note) => {
-    return number2Note( note2NumberFull(note), false)
+    return number2Note(note2NumberFull(note), false)
 }
 
 // with scale
