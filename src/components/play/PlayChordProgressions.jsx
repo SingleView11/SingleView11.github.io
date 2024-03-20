@@ -55,7 +55,7 @@ const info2ChordData = (para) => {
 
 export const PlayChordProg = () => {
   const { config, setConfig } = useContext(ConfigContext)
-  const {stateRef} = useContext(playContext)
+  const { stateRef } = useContext(playContext)
 
   const [para, setPara] = useState(CHORD_PROG_INIT_PARAS)
   const [chordPara, setChordPara] = useState(CHORD_SINGLE_INIT_PARAS)
@@ -66,8 +66,9 @@ export const PlayChordProg = () => {
 
   useEffect(() => {
     chordStateRef.chordList = [...chordList]
-    chordStateRef.para = {...para}
-  }, [para, chordList]);
+    chordStateRef.para = { ...para }
+    chordStateRef.loop = loop
+  }, [para, chordList, loop]);
 
   const addListChord = () => {
     const newListData = [...chordList, info2ChordData({ ...chordPara })]
@@ -83,7 +84,7 @@ export const PlayChordProg = () => {
     })
     setChordList(newListData)
   }
-  
+
   const swapArr = (arr, i1, i2) => {
     let tmp = arr[i1]
     arr[i1] = arr[i2]
@@ -126,20 +127,20 @@ export const PlayChordProg = () => {
     stopSamplerAll()
     let chords = chordStateRef.chordList, paras = chordStateRef.para
     console.log(paras)
-    if(chords.length < 1) return
+    if (chords.length < 1) return
     let chordSounds = chords.map(chordData => {
       return genChordProblemFromPos(paras, chordData.info)
     })
     let chordTimes = chords.map(chordData => {
       return chordData.info.time.cur
-    })  
+    })
     // console.log(chordSounds)
     // console.log(chordTimes)
     // console.log(loop)
-    await playSoundMulti(chordSounds, chordTimes.map(t=>{
+    await playSoundMulti(chordSounds, chordTimes.map(t => {
       return t * config.noteBpm.cur
-    }) , config.speed.cur)
-    
+    }), config.speed.cur)
+
 
   }
 
@@ -149,12 +150,13 @@ export const PlayChordProg = () => {
     //   let chordVal = genChordProblemFromPos(para, chordData.info)
     //   console.log(chordVal)
     // })
+    if (chordStateRef.chordList.length < 1) return
     stateRef.current = true
     await playChordWithConfig()
-    while (loop && stateRef.current  ) {
-      if(chordStateRef.chordList.length < 1) break
+    while (chordStateRef.loop && stateRef.current) {
+      if (chordStateRef.chordList.length < 1) break
       await playChordWithConfig()
-    } 
+    }
 
   }
 
@@ -239,7 +241,7 @@ export const PlayChordProg = () => {
         <Row justify="center" style={{ margin: 0 }}>
           <Button type='success' style={{ margin: 5 }} onClick={playChordProgression}   >Play</Button>
           <Button type={loop ? 'primary' : 'default'} style={{ margin: 5 }} onClick={() => {
-            
+
             let origin = loop
             loop = !origin
             setLoop(!origin)

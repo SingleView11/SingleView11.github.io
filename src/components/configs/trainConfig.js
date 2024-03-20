@@ -10,7 +10,7 @@ export const generateConfig = (obj) => {
         // min and max for range
         min: 0.01,
         max: 3,
-        cur: 0,
+        cur: 0.01,
     }
 
     // playForm mode
@@ -42,7 +42,7 @@ export const generateConfig = (obj) => {
     const noteBpmInit = {
         min: 0.01,
         max: 10,
-        cur: 2,
+        cur: 1,
     }
 
     const waitIntervalInit = {

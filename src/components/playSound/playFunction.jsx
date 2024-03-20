@@ -114,7 +114,7 @@ export const playSoundMulti = async (sounds, times = 1, interval = 1) => {
         let pi = new Promise((res, rej) => {
             let timeId = setTimeout(() => {
                 playSoundOnce(value, playTime).then(()=>{
-                    setTimeout(()=> { res()}, 1000 * nextTime)
+                    setTimeout(()=> { res()}, 0)
                 })
             }, curTime)
             timeoutArr.push({ timeId: timeId, rej: rej, res: res })
