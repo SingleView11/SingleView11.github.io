@@ -42,7 +42,7 @@ export const generateConfig = (obj) => {
     const noteBpmInit = {
         min: 0.01,
         max: 10,
-        cur: 1,
+        cur: 0.5,
     }
 
     const waitIntervalInit = {
@@ -214,7 +214,7 @@ for (let i = 0; i < chordDiff.length; i++) {
 
 export const easyConfig = alterConfigDifficulty(1, 0, 3, 1, diffMap, { min: 4, max: 4 })
 export const mediumConfig = alterConfigDifficulty(0.5, 1, 2, 2, diffMap, { min: 3, max: 5 })
-export const hardConfig = alterConfigDifficulty(0.01, 2, 1, 3, diffMap, { min: 0, max: 7 })
+export const hardConfig = alterConfigDifficulty(0.01, 2, 0, 3, diffMap, { min: 2, max: 6 })
 
 
 const configMap = new Map();

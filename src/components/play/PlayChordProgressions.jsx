@@ -145,6 +145,7 @@ export const PlayChordProg = () => {
   }
 
   const playChordProgression = async () => {
+    if (stateRef.current) return;
     stopAll()
     // chordList.forEach(chordData=> {
     //   let chordVal = genChordProblemFromPos(para, chordData.info)
@@ -157,6 +158,7 @@ export const PlayChordProg = () => {
       if (chordStateRef.chordList.length < 1) break
       await playChordWithConfig()
     }
+    stateRef.current = false
 
   }
 
