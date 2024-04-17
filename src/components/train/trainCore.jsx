@@ -104,7 +104,7 @@ const TrainArea = () => {
             playCurProblem(config.rightThen.cur == 0).then(() => {
 
 
-                if (config.questionNumber.cur && progress.finishedNum >= config.questionNumber.cur - 1) {
+                if (config.questionNumber.cur && progress.finishedNum >= config.questionNumber.cur) {
                     setTimeout(() => {
                         endTrain()
                     }, 2000)

@@ -4,7 +4,6 @@ import { Button } from 'antd';
 
 // const choices = ["interval", "note", "chord", "melody"]
 const TRAIN_CHOICES = ["interval", "note", "chord"]
-const levels = ["Easy", "Medium", "Hard", "Extreme", "Custom"]
 
 // generate subnav item object 
 export function upFirst(str) {

@@ -10,6 +10,7 @@ import { Content } from "antd/es/layout/layout";
 import { playSoundMulti, stopSamplerAll } from "../playSound/playFunction";
 import { ConfigContext } from "../globalStates/ConfigContext";
 import { playContext } from "./playGround";
+import { PlayConfigComponent } from "./playConfigUI";
 
 const { Text, Title } = Typography;
 
@@ -253,6 +254,8 @@ export const PlayChordProg = () => {
           }}   >Pause</Button>
         </Row>
       </Content>
+
+      <PlayConfigComponent></PlayConfigComponent>
 
     </>
 
