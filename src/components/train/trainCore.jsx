@@ -210,20 +210,21 @@ const TrainArea = () => {
     return (
         <>
 
+
+
             <Content
                 style={{
                     margin: 0,
                     marginTop: 20,
-                    padding: 24,
+                    padding: 10,
                     background: colorBgContainer,
                     borderRadius: borderRadiusLG,
                 }}
             >
-                <TitleCen level={2} text={ansStatus !== 1 ? "?" : curProblem.showName}></TitleCen>
 
                 <ButtonGroupWithFunc
                     config={config} setConfig={setConfig} propName={"sounds"}
-                    disableCtl={true} tagName={"playable"} buttonSize={80}
+                    disableCtl={true} tagName={"playable"} buttonWidth={100} buttonHeight={50}
                     size={'small'}
                     clickFunc={clickButtonHandler}
                 ></ButtonGroupWithFunc>
@@ -235,6 +236,19 @@ const TrainArea = () => {
 
                 <ProgressBarTrain progress={Math.round(100 * (config.questionNumber.cur ? (progress.finishedNum / config.questionNumber.cur) : 0))} ></ProgressBarTrain>
 
+
+            </Content>
+
+            <Content
+                style={{
+                    margin: 0,
+                    marginTop: 20,
+                    padding: 10,
+                    background: colorBgContainer,
+                    borderRadius: borderRadiusLG,
+                }}
+            >
+                <TitleCen level={2} text={ansStatus !== 1 ? "?" : curProblem.showName}></TitleCen>
 
             </Content>
 

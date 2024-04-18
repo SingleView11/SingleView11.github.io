@@ -4,7 +4,7 @@ import { Col, Row, Slider, InputNumber } from 'antd';
 import { TitleCen } from "./titleFunc";
 import { upFirst } from "../configs/levelTypes";
 
-export const SlideBarRangeProp = ({ config, setConfig, propName, propTitle, sliderStep = 1 }) => {
+export const SlideBarRangeProp = ({ config, setConfig, propName, propTitle, sliderStep = 1, triggerFunc = () => { } }) => {
     let cfg = {
         ...config
     }
@@ -19,7 +19,7 @@ export const SlideBarRangeProp = ({ config, setConfig, propName, propTitle, slid
             }
         }
         setConfig(cfg)
-
+        triggerFunc()
     }
     return (
         <>
@@ -80,7 +80,7 @@ export const SlideBarRangeProp = ({ config, setConfig, propName, propTitle, slid
     // )
 }
 
-export const SlideBarProp = ({ config, setConfig, propName, propTitle, sliderStep = 1 }) => {
+export const SlideBarProp = ({ config, setConfig, propName, propTitle, sliderStep = 1, triggerFunc=()=>{} }) => {
     let cfg = {
         ...config
     }
@@ -91,7 +91,7 @@ export const SlideBarProp = ({ config, setConfig, propName, propTitle, sliderSte
             cur: value
         }
         setConfig(cfg)
-
+        triggerFunc()
     }
     return (
         <>
@@ -151,7 +151,7 @@ export const ButtonSelecOne = ({ config, setConfig, propName, propTitle }) => {
     )
 }
 
-export const ButtonGroupWithFunc = ({ config, setConfig, propName, clickFunc, tagName, disableCtl = false, buttonSize = 200, size = "" }) => {
+export const ButtonGroupWithFunc = ({ config, setConfig, propName, clickFunc, tagName, disableCtl = false, buttonWidth = 200, buttonHeight="auto", size = "" }) => {
     const judgeButtonType = (soundInfo, tagName) => {
         if (soundInfo.isCorrect == -1) {
             return soundInfo[tagName] ? "primary" : "default"
@@ -164,11 +164,20 @@ export const ButtonGroupWithFunc = ({ config, setConfig, propName, clickFunc, ta
             {config[propName].map((soundInfo, index) => {
                 return (
                     <Col key={soundInfo["key"]}>
-                        <Button style={{ margin: 10, width: buttonSize, }} id={soundInfo.key}
+                        <Button
+                            style={{
+                                margin: 10,
+                                width: buttonWidth,
+                                height: buttonHeight,
+                                // alignItems: "center",
+                                // display: "inline-flex",
+                            }}
+                            id={soundInfo.key}
                             key={soundInfo["key"]} name={soundInfo["name"]}
                             onClick={clickFunc}
                             type={judgeButtonType(soundInfo, tagName)}
-                            size={size}
+                            // size={size}
+                            // block
                             // disabled={true}
                             disabled={soundInfo[tagName] ? false : disableCtl}
 

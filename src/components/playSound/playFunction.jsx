@@ -2,8 +2,11 @@ import * as Tone from "tone"
 import { randomElement } from "../../utils/giveTips";
 import { noteSounds } from "../../utils/musicTerms";
 import { NOTE_RANGE, number2Note } from "./playSpecific";
+import { ConfigContext } from '../globalStates/ConfigContext';
+import { useContext } from "react";
 
 // Juste quelques tests à partir des docs du site Tone.js ! https://tonejs.github.io/
+
 
 // PIANO SAMPLER
 const sampler = new Tone.Sampler({
@@ -40,6 +43,8 @@ const sampler = new Tone.Sampler({
         C8: "C8.mp3"
     },
 
+
+
     // Cela règle la durée de permanence des notes jouées
     // release: 1,
 
@@ -48,6 +53,8 @@ const sampler = new Tone.Sampler({
 
     baseUrl: "https://tonejs.github.io/audio/salamander/"
 }).toDestination();
+
+sampler.volume.value = 5
 // piano({
 //     parent: document.querySelector("#content"),
 //     noteon: note => sampler.triggerAttack(note.name),
@@ -56,6 +63,11 @@ const sampler = new Tone.Sampler({
 // });
 // const reverb = new Tone.Reverb(10);
 // sampler.chain(reverb, Tone.Destination);
+
+
+export const changeSamplerSound = (vol) => {
+    sampler.volume.value = vol
+}
 
 let oneSoundSamplerToReleaseTimeOutIds = []
 
@@ -106,26 +118,26 @@ export const playSoundMulti = async (sounds, times = 1, interval = 1) => {
         let curTime = accuTime
         let timeoutArr = oneSoundSamplerToReleaseTimeOutIds
         let playTime = times;
-        if(Array.isArray(times)) playTime = times[Math.min(times.length-1, index)]
+        if (Array.isArray(times)) playTime = times[Math.min(times.length - 1, index)]
         let nextTime = interval;
-        if( Array.isArray(interval)) {
-            nextTime = interval[Math.min(index, interval.length-1)]
-        } 
+        if (Array.isArray(interval)) {
+            nextTime = interval[Math.min(index, interval.length - 1)]
+        }
         let pi = new Promise((res, rej) => {
             let timeId = setTimeout(() => {
-                playSoundOnce(value, playTime).then(()=>{
-                    setTimeout(()=> { res()}, 0)
+                playSoundOnce(value, playTime).then(() => {
+                    setTimeout(() => { res() }, 0)
                 })
             }, curTime)
             timeoutArr.push({ timeId: timeId, rej: rej, res: res })
 
         })
-        
+
         nextTime += playTime
         accuTime += nextTime * 1000
         piList.push(pi)
     }
-    return Promise.all(piList).then(()=>{
+    return Promise.all(piList).then(() => {
         // console.log("1111")
     })
 }

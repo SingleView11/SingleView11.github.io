@@ -32,14 +32,14 @@ const ConfigComponent = () => {
 
     return (
         <Content
-                        style={{
-                            margin: 0,
-                            marginTop: 20,
-                            padding: 24,
-                            background: colorBgContainer,
-                            borderRadius: borderRadiusLG,
-                        }}
-                    >
+            style={{
+                margin: 0,
+                marginTop: 20,
+                padding: 24,
+                background: colorBgContainer,
+                borderRadius: borderRadiusLG,
+            }}
+        >
 
             {/* Buttons of Sounds */}
 
@@ -60,6 +60,8 @@ const ConfigComponent = () => {
 
             <ButtonSelecOne config={config} setConfig={setConfig} propName={"wrongThen"} propTitle={"Action after wrong"}></ButtonSelecOne>
             <ButtonSelecOne config={config} setConfig={setConfig} propName={"rightThen"} propTitle={"Action after correct"}></ButtonSelecOne>
+            <SlideBarProp config={config} setConfig={setConfig} propName={"volume"} propTitle={"Volume"} sliderStep={0.1} ></SlideBarProp>
+
             {config[""]}
         </Content>
     )
