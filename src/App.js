@@ -1,5 +1,5 @@
 // App.js
-import { Routes, Route, HashRouter } from 'react-router-dom';
+import { Routes, Route, HashRouter, BrowserRouter } from 'react-router-dom';
 import AboutComponent from './components/layout/About';
 // import IntroductionPage from "./components/layout/IntroductionPage"
 import HeaderComponent from './components/layout/Header';
@@ -23,7 +23,7 @@ const App = () => {
 
   return (
     <>
-      <HashRouter>
+      <BrowserRouter>
         <ConfigContext.Provider value={{
           config: config, setConfig: setConfig,
           trainState: trainState, setTrainState: setTrainState,
@@ -42,7 +42,7 @@ const App = () => {
           </Routes>
           <FooterComponent></FooterComponent>
         </ConfigContext.Provider>
-      </HashRouter>
+      </BrowserRouter>
     </>
   );
 };
