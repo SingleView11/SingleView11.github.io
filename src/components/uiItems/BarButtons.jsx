@@ -80,7 +80,7 @@ export const SlideBarRangeProp = ({ config, setConfig, propName, propTitle, slid
     // )
 }
 
-export const SlideBarProp = ({ config, setConfig, propName, propTitle, sliderStep = 1, triggerFunc=()=>{} }) => {
+export const SlideBarProp = ({ config, setConfig, propName, propTitle, sliderStep = 1, triggerFunc = () => { } }) => {
     let cfg = {
         ...config
     }
@@ -151,7 +151,8 @@ export const ButtonSelecOne = ({ config, setConfig, propName, propTitle }) => {
     )
 }
 
-export const ButtonGroupWithFunc = ({ config, setConfig, propName, clickFunc, tagName, disableCtl = false, buttonWidth = 200, buttonHeight="auto", size = "" }) => {
+
+export const ButtonGroupWithFunc = ({ config, setConfig, propName, clickFunc, tagName, disableCtl = false, buttonWidth = 200, buttonHeight = "auto", size = "", selectWhole = false, selectAll, selectNone, }) => {
     const judgeButtonType = (soundInfo, tagName) => {
         if (soundInfo.isCorrect == -1) {
             return soundInfo[tagName] ? "primary" : "default"
@@ -160,31 +161,61 @@ export const ButtonGroupWithFunc = ({ config, setConfig, propName, clickFunc, ta
         if (soundInfo.isCorrect == 2) return "success"
     }
     return (
-        <Row justify="center">
-            {config[propName].map((soundInfo, index) => {
-                return (
-                    <Col key={soundInfo["key"]}>
-                        <Button
-                            style={{
-                                margin: 10,
-                                width: buttonWidth,
-                                height: buttonHeight,
-                                // alignItems: "center",
-                                // display: "inline-flex",
-                            }}
-                            id={soundInfo.key}
-                            key={soundInfo["key"]} name={soundInfo["name"]}
-                            onClick={clickFunc}
-                            type={judgeButtonType(soundInfo, tagName)}
-                            // size={size}
-                            // block
-                            // disabled={true}
-                            disabled={soundInfo[tagName] ? false : disableCtl}
+        <>
+            <Row justify="center">
+                {config[propName].map((soundInfo, index) => {
+                    return (
+                        <Col key={soundInfo["key"]}>
+                            <Button
+                                style={{
+                                    margin: 10,
+                                    width: buttonWidth,
+                                    height: buttonHeight,
+                                    // alignItems: "center",
+                                    // display: "inline-flex",
+                                }}
+                                id={soundInfo.key}
+                                key={soundInfo["key"]} name={soundInfo["name"]}
+                                onClick={clickFunc}
+                                type={judgeButtonType(soundInfo, tagName)}
+                                // size={size}
+                                // block
+                                // disabled={true}
+                                disabled={soundInfo[tagName] ? false : disableCtl}
 
-                        >{soundInfo["name"]}</Button>
-                    </Col>
-                )
-            })}
-        </Row>
+                            >{soundInfo["name"]}</Button>
+                        </Col>
+                    )
+                })}
+            </Row>
+            {selectWhole && <Row justify="center">
+                <Col key="select all">
+                    <Button
+                        type={"success"}
+                        style={{
+                            margin: 10,
+                            width: buttonWidth,
+                            height: buttonHeight,
+                            // alignItems: "center",
+                            // display: "inline-flex",
+                        }}
+                        onClick={selectAll}
+                    >All</Button>
+                </Col>
+                <Col key="select none">
+                    <Button
+                        type={"info"}
+                        style={{
+                            margin: 10,
+                            width: buttonWidth,
+                            height: buttonHeight,
+                            // alignItems: "center",
+                            // display: "inline-flex",
+                        }}
+                        onClick={selectNone}
+                    >None</Button>
+                </Col>
+            </Row>}
+        </>
     )
 }

@@ -19,7 +19,7 @@ const arr2Str = (arr) => {
 export const number2Note = (num, needNum = true) => {
     num = clipNoteNum(num)
     let scale = Math.floor(num / 12), note = num % 12;
-    if(!needNum) return noteSounds[note]
+    if (!needNum) return noteSounds[note]
     return noteSounds[note] + scale;
 }
 
@@ -30,15 +30,15 @@ export const note2Number = (note) => {
 }
 
 const clipNoteNum = (num) => {
-    if(num > NOTE_RANGE.max) return NOTE_RANGE.max 
-    if(num < NOTE_RANGE.min) return NOTE_RANGE.min
+    if (num > NOTE_RANGE.max) return NOTE_RANGE.max
+    if (num < NOTE_RANGE.min) return NOTE_RANGE.min
     return num
 }
 
 export const note2NumberFull = (note) => {
-    let nt = note.substr(0, note.length-1)
+    let nt = note.substr(0, note.length - 1)
     for (let [index, val] of noteSounds.entries()) {
-        if (nt == val) return clipNoteNum( index + 12 * parseInt(note[note.length-1]))
+        if (nt == val) return clipNoteNum(index + 12 * parseInt(note[note.length - 1]))
     }
 }
 
@@ -119,6 +119,11 @@ const findIntervalArr = (name) => {
 }
 
 const generateIntervalNoteGroup = (name, config) => {
+    // if (name == "empty") {
+    //     return {
+    //         // noteNums: noteNums, playNotes: noteNums.map(num => number2Note(num))
+    //     }
+    // }
     let intervalArr = findIntervalArr(name)
     let ok = false
     let noteNums
@@ -207,7 +212,9 @@ export const genRandomProblem = (config) => {
     for (let sound of config.sounds) {
         if (sound.playable) avaiableSounds.push(sound)
     }
-
+    if (avaiableSounds.length == 0) {
+        return {}
+    }
     const name = randomElement(avaiableSounds).name
 
     let playNotes = []
@@ -317,7 +324,7 @@ export const genRandomProblem = (config) => {
 
 
 export const playWrongSoundWithBase = async (problem, soundFalse, config, play) => {
-    if(!play) return
+    if (!play) return
     let falseProblem = genFalseProblem(problem, soundFalse, config)
     await playProblem(falseProblem, config)
     return

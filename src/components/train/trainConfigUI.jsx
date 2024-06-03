@@ -27,6 +27,33 @@ const ConfigComponent = () => {
         })
     }
 
+    const selectAllSound = (e) => {
+        // console.log("fuc")
+        setConfig({
+            ...config,
+            sounds: config["sounds"].map(soundConfig => {
+                // if (soundConfig.key !== e.currentTarget.id) return soundConfig;
+                return {
+                    ...soundConfig,
+                    playable: true,
+                }
+            })
+        })
+    }
+
+    const selectNoneSound = (e) => {
+        setConfig({
+            ...config,
+            sounds: config["sounds"].map(soundConfig => {
+                // if (soundConfig.key !== e.currentTarget.id) return soundConfig;
+                return {
+                    ...soundConfig,
+                    playable: false,
+                }
+            })
+        })
+    }
+
 
 
 
@@ -47,7 +74,13 @@ const ConfigComponent = () => {
 
 
 
-            <ButtonGroupWithFunc config={config} setConfig={setConfig} propName={"sounds"} disableCtl={false} tagName={"playable"} clickFunc={soundChoose} ></ButtonGroupWithFunc>
+            <ButtonGroupWithFunc config={config}
+                setConfig={setConfig} propName={"sounds"}
+                disableCtl={false} tagName={"playable"}
+                clickFunc={soundChoose} selectWhole={true}
+                selectAll={selectAllSound}
+                selectNone={selectNoneSound}
+            ></ButtonGroupWithFunc>
 
             <ButtonSelecOne config={config} setConfig={setConfig} propName={"playForm"} propTitle={"Mode"}></ButtonSelecOne>
             <SlideBarProp config={config} setConfig={setConfig} propName={"questionNumber"} propTitle={"Question number"} sliderStep={5} ></SlideBarProp>

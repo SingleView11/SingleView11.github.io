@@ -187,6 +187,9 @@ export const alterConfigDifficulty = (spd, preludeUsage, waitTime, diff, diffMap
             },
             sounds:
                 config.sounds.map((sound, index) => {
+                    console.log(sound)
+                    console.log(diffMap.get(sound.name))
+                    console.log(diff)
                     return {
                         ...sound,
                         playable: diffMap.get(sound.name) <= diff
@@ -219,9 +222,9 @@ for (let i = 0; i < chordDiff.length; i++) {
 }
 
 
-export const easyConfig = alterConfigDifficulty(1, 0, 3, 1, diffMap, { min: 4, max: 4 })
-export const mediumConfig = alterConfigDifficulty(0.5, 1, 2, 0.5, diffMap, { min: 3, max: 5 })
-export const hardConfig = alterConfigDifficulty(0.01, 2, 0, 0.1, diffMap, { min: 3, max: 6 })
+export const easyConfig = alterConfigDifficulty(1, 0, 1, 1, diffMap, { min: 4, max: 4 })
+export const mediumConfig = alterConfigDifficulty(0.5, 1, 2, 2, diffMap, { min: 3, max: 5 })
+export const hardConfig = alterConfigDifficulty(0.01, 0.5, 0, 3, diffMap, { min: 3, max: 6 })
 
 
 const configMap = new Map();
