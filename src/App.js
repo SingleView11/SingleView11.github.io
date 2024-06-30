@@ -7,6 +7,7 @@ import FooterComponent from './components/layout/Footer';
 import ErrorComponent from './components/layout/ErrorPage';
 import HomeComponent from './components/layout/Home';
 import TrainGround from './components/train/trainGround';
+import RepairComponent from './components/layout/Repair';
 
 
 import 'antd-button-color/dist/css/style.css';
@@ -35,9 +36,10 @@ const App = () => {
             <Route path="/about" element={<AboutComponent />} />
             <Route path='/train' element={<TrainGround />} />
 
-            <Route path='/listen' element={<TrainGround />} />
+            <Route path='/listen' element={<RepairComponent />} />
             <Route path='/play' element={<PlayGround />} />
             <Route path='/setting' element={<PlayGround />} />
+            <Route path='/user' element={<RepairComponent />} />
             <Route path='*' element={<ErrorComponent />} />
           </Routes>
           <FooterComponent></FooterComponent>

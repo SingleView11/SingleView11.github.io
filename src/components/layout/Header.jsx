@@ -15,10 +15,10 @@ const navItems = [
         key: 2,
         label: <Link to="/train"> Train </Link>
     },
-    {
-        key: 3,
-        label: <Link to="/listen"> Listen </Link>
-    },
+    // {
+    //     key: 3,
+    //     label: <Link to="/listen"> Listen </Link>
+    // },
     {
         key: 4,
         label: <Link to="/play"> Play </Link>
@@ -30,6 +30,10 @@ const navItems = [
     {
         key: 6,
         label: <Link to="/about"> About </Link>
+    },
+    {
+        key: 7,
+        label: <Link to="/user"> Login </Link>
     },
 ]
 const HeaderComponent = () => {

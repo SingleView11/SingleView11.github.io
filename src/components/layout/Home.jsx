@@ -33,10 +33,11 @@ const HomeComponent = () => {
                     <p>With constant practice, you will be able to achieve at least relative pitch perfect.</p>
 
                     <h1>Quickstarts</h1>
+                    <p>Log in to create your customized quickstarter!</p>
                     {/* <RandomCard1></RandomCard1> */}
                     {/* <RandomCard2></RandomCard2> */}
                     {/* <DemoCard></DemoCard> */}
-                    <RandomCardListNum num={20}></RandomCardListNum>
+                    {/* <RandomCardListNum num={20}></RandomCardListNum> */}
                 </div>
             </Content>
         </Layout>
