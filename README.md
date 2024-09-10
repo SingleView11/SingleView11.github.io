@@ -1,3 +1,16 @@
+# 使用方式
+
+首先git clone
+
+然后下载[nvm](https://github.com/coreybutler/nvm-windows/releases)
+
+然后使用nvm管理npm和node，npm版本为9，node版本为18，小版本无所谓
+
+然后npm i
+
+然后npm start
+
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
