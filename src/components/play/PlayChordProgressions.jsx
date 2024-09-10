@@ -12,7 +12,7 @@ import { ConfigContext } from "../globalStates/ConfigContext";
 import { playContext } from "./playGround";
 import { PlayConfigComponent } from "./playConfigUI";
 
-const { Text, Title } = Typography;
+const { Text, Title } = Typography ;
 
 
 const ChordProgressionUIList = ({ data, deleteFunc, infoFunc, moveLeft, moveRight, editFunc }) => (
