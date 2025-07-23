@@ -147,16 +147,20 @@ const TrainArea = () => {
 
     const wrongAns = (soundFalse) => {
         let sound = curProblem.name
+        // Update ansStatus immediately to prevent race condition
+        if (ansStatus == -1) {
+            setProgress({
+                ...progress,
+                wrongNum: progress.wrongNum + 1,
+                wrongSounds: progress.wrongSounds.set(sound, (progress.wrongSounds.get(sound) ?? 0) + 1),
+                chosen: true,
+            })
+            setAnsStatus(0)
+        }
+        
+        // Play sound asynchronously without affecting state
         playWrongSoundWithBase(curProblem, soundFalse, config, config.wrongThen.cur == 0).then(() => {
-            if (ansStatus == -1) {
-                setProgress({
-                    ...progress,
-                    wrongNum: progress.wrongNum + 1,
-                    wrongSounds: progress.wrongSounds.set(sound, (progress.wrongSounds.get(sound) ?? 0) + 1),
-                    chosen: true,
-                })
-                setAnsStatus(0)
-            }
+            // Audio finished, but state already updated above
         })
 
 
@@ -164,6 +168,9 @@ const TrainArea = () => {
 
 
     const clickButtonHandler = (e) => {
+        // Prevent multiple clicks on same problem
+        if (ansStatus == 1) return;
+        
         const buttonVal = e.currentTarget.name
         if (curProblem.name == buttonVal) {
             setConfig({

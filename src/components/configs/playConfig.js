@@ -1,4 +1,4 @@
-import { PlayChordProg } from "../play/playChordProgressions"
+import { PlayChordProg } from "../play/PlayChordProgressions"
 
 export const PLAY_CHOICES = ["Chord Prog"]
 

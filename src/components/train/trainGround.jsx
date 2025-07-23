@@ -9,7 +9,7 @@ import { ConfigContext } from '../globalStates/ConfigContext';
 import { configMap } from '../configs/trainConfig';
 import { easyConfig, mediumConfig, hardConfig } from '../configs/trainConfig';
 import { ConfigComponent } from './trainConfigUI';
-import { TrainResult } from './trainResult';
+import { TrainResult } from './TrainResult';
 import { generateInitProgress } from '../configs/progressConfig';
 import { stopSamplerAll } from '../playSound/playFunction';
 
