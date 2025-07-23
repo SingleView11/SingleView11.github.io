@@ -1,0 +1,190 @@
+.auth-page {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.a/* Responsive Design */
+@media (max-width: 768px) {
+  .auth-page {
+    padding: 10px;
+  }
+  
+  .auth-header {
+    padding: 30px 15px 15px;
+  }
+  
+  .auth-title {
+    font-size: 24px !important;
+  }
+  
+  .auth-subtitle {
+    font-size: 14px;
+  }
+  
+  .auth-form {
+    padding: 15px 0;
+  }
+  
+  .auth-button {
+    height: 44px;
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 576px) {
+  .auth-card {
+    margin: 10px;
+    border-radius: 12px;
+  }
+  
+  .auth-header {
+    padding: 25px 10px 10px;
+    margin: -20px -20px 20px -20px;
+  }
+  
+  .auth-title {
+    font-size: 22px !important;
+  }
+  
+  .auth-form .ant-col {
+    margin-bottom: 0;
+  }
+}
+
+/* Loading state */
+.auth-button.ant-btn-loading {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+/* Form validation styles */
+.auth-form .ant-form-item-has-error .ant-input,
+.auth-form .ant-form-item-has-error .ant-input-password {
+  border-color: #ff4d4f;
+}
+
+.auth-form .ant-form-item-has-error .ant-input:hover,
+.auth-form .ant-form-item-has-error .ant-input-password:hover {
+  border-color: #ff4d4f;
+}
+
+.auth-header {
+  text-align: center;
+  padding: 40px 20px 20px;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  margin: -24px -24px 24px -24px;
+}
+
+.auth-title {
+  margin-bottom: 8px !important;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 700;
+}
+
+.auth-subtitle {
+  font-size: 16px;
+  display: block;
+}
+
+.auth-tabs {
+  margin-bottom: 0;
+}
+
+.auth-tabs .ant-tabs-tab {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.auth-tabs .ant-tabs-tab-active .ant-tabs-tab-btn {
+  color: #667eea;
+}
+
+.auth-tabs .ant-tabs-ink-bar {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.auth-form {
+  padding: 20px 0;
+}
+
+.auth-form .ant-form-item-label > label {
+  font-weight: 500;
+  color: #434343;
+}
+
+.auth-form .ant-input,
+.auth-form .ant-input-password {
+  border-radius: 8px;
+  border: 1px solid #d9d9d9;
+  transition: all 0.3s ease;
+}
+
+.auth-form .ant-input:hover,
+.auth-form .ant-input-password:hover,
+.auth-form .ant-input:focus,
+.auth-form .ant-input-password:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 2px rgba(102, 126, 234, 0.1);
+}
+
+.auth-button {
+  height: 48px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  font-weight: 500;
+  font-size: 16px;
+  margin-top: 16px;
+}
+
+.auth-button:hover {
+  background: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
+}
+
+.auth-switch {
+  text-align: center;
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.switch-button {
+  padding: 0;
+  font-weight: 500;
+  color: #667eea;
+}
+
+.switch-button:hover {
+  color: #5a6fd8;
+}
+
+.auth-toggle p {
+  color: #666;
+  margin: 0;
+}
+
+.link-button {
+  background: none;
+  border: none;
+  color: #667eea;
+  cursor: pointer;
+  font-weight: 600;
+  text-decoration: underline;
+}
+
+.link-button:hover {
+  color: #764ba2;
+}
+
+@media (max-width: 480px) {
+  .auth-card {
+    padding: 30px 20px;
+  }
+  
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+}
