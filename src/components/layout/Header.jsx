@@ -1,11 +1,12 @@
 import React, { useContext } from 'react';
 import { Breadcrumb, Layout, Menu, theme, Button, Space } from 'antd';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { ConfigContext } from '../globalStates/ConfigContext';
 const { Header, Content } = Layout;
 
 const HeaderComponent = () => {
     const { user, onLogout } = useContext(ConfigContext);
+    const location = useLocation();
     const {
         token: { colorBgContainer, borderRadiusLG },
     } = theme.useToken();
@@ -13,19 +14,19 @@ const HeaderComponent = () => {
     const getNavItems = () => {
         const baseItems = [
             {
-                key: 1,
+                key: '/',
                 label: <Link to="/"> Home </Link>
             },
             {
-                key: 2,
+                key: '/train',
                 label: <Link to="/train"> Train </Link>
             },
             {
-                key: 4,
+                key: '/play',
                 label: <Link to="/play"> Play </Link>
             },
             {
-                key: 6,
+                key: '/about',
                 label: <Link to="/about"> About </Link>
             }
         ];
@@ -33,12 +34,32 @@ const HeaderComponent = () => {
         if (user) {
             // Authenticated user - show dashboard and logout
             baseItems.push({
-                key: 7,
+                key: '/dashboard',
                 label: <Link to="/dashboard"> Dashboard </Link>
             });
         }
 
         return baseItems;
+    };
+
+    // Determine which menu item should be selected based on current path
+    const getSelectedKeys = () => {
+        const path = location.pathname;
+        
+        // Direct path matches
+        if (path === '/') return ['/'];
+        if (path === '/train') return ['/train'];
+        if (path === '/play') return ['/play'];
+        if (path === '/about') return ['/about'];
+        if (path === '/dashboard') return ['/dashboard'];
+        
+        // For nested paths, select the parent
+        if (path.startsWith('/train')) return ['/train'];
+        if (path.startsWith('/play')) return ['/play'];
+        if (path.startsWith('/dashboard')) return ['/dashboard'];
+        
+        // Default to home for unknown paths
+        return ['/'];
     };
 
     const getUserSection = () => {
@@ -79,7 +100,7 @@ const HeaderComponent = () => {
                     <Menu
                         theme="dark"
                         mode="horizontal"
-                        defaultSelectedKeys={['1']}
+                        selectedKeys={getSelectedKeys()}
                         items={getNavItems()}
                         style={{
                             flex: 1,
