@@ -50,6 +50,15 @@ export const TrainResult = () => {
             }
 
             try {
+                // Create a unique key for this training session to prevent duplicate saves
+                const trainingHash = `${user.id}_${progress.rightNum}_${progress.wrongNum}_${JSON.stringify(Array.from(progress.rightSounds || new Map()))}_${JSON.stringify(Array.from(progress.wrongSounds || new Map()))}`;
+                const sessionKey = `saved_session_${btoa(trainingHash).slice(0, 20)}`; // Create shorter key
+                
+                if (localStorage.getItem(sessionKey)) {
+                    console.log('Training session already saved, skipping...');
+                    return;
+                }
+                
                 // Generate a session ID for this training session
                 const sessionId = crypto.randomUUID();
                 
@@ -153,6 +162,9 @@ export const TrainResult = () => {
                 if (successCount > 0) {
                     message.success(`Training session saved! ${successCount} questions recorded.`);
                     console.log(`Saved training session with ${successCount} records`);
+                    
+                    // Mark this session as saved in localStorage to prevent duplicates
+                    localStorage.setItem(sessionKey, 'true');
                 } else {
                     throw new Error('No records were saved successfully');
                 }
