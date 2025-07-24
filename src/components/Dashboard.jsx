@@ -220,7 +220,7 @@ const Dashboard = () => {
               title="Training Types"
               value={analytics?.typeStats?.length || 0}
               prefix={<SoundOutlined style={{ color: '#722ed1' }} />}
-              suffix="practiced"
+              suffix=" practiced"
             />
           </Card>
         </Col>
@@ -274,7 +274,9 @@ const Dashboard = () => {
                           <Tag color={getTrainingTypeColor(item.trainingType)}>
                             {formatTrainingType(item.trainingType)}
                           </Tag>
-                          <Text>{item.musicalElement}</Text>
+                          <span style={{ marginLeft: '8px' }}>
+                            <Text>{item.musicalElement}</Text>
+                          </span>
                         </div>
                         <div style={{ textAlign: 'right' }}>
                           <div>

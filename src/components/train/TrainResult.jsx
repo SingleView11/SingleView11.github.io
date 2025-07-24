@@ -17,6 +17,22 @@ export const TrainResult = () => {
     const [isSaving, setIsSaving] = useState(false)
     const hasSaved = useRef(false) // Track if we've already saved
 
+    // Function to determine the correct training type based on config
+    const getTrainingType = (config) => {
+        if (!config || !config.type) {
+            return 'interval_recognition'; // fallback
+        }
+        
+        const typeMapping = {
+            'interval': 'interval_recognition',
+            'chord': 'chord_recognition', 
+            'note': 'note_recognition',
+            'melody': 'melody_recognition'
+        };
+        
+        return typeMapping[config.type] || 'interval_recognition';
+    };
+
     // Save training results when component mounts (session completed)
     useEffect(() => {
         const saveTrainingResults = async () => {
@@ -77,7 +93,7 @@ export const TrainResult = () => {
                         for (let i = 0; i < count; i++) {
                             trainingRecords.push({
                                 sessionId: sessionId, // UUID string
-                                trainingType: config.trainingType || 'interval_recognition',
+                                trainingType: getTrainingType(config),
                                 playMode: config.playMode || 'harmonic',
                                 musicalElement: String(musicalElement), // Ensure string
                                 userAnswer: String(musicalElement), // Ensure string, correct answer
@@ -93,7 +109,7 @@ export const TrainResult = () => {
                         for (let i = 0; i < count; i++) {
                             trainingRecords.push({
                                 sessionId: sessionId,
-                                trainingType: config.trainingType || 'interval_recognition',
+                                trainingType: getTrainingType(config),
                                 playMode: config.playMode || 'harmonic',
                                 musicalElement: String(musicalElement),
                                 userAnswer: 'unknown', // We don't track wrong answers specifically
@@ -110,7 +126,7 @@ export const TrainResult = () => {
                     for (let i = 0; i < progress.rightNum; i++) {
                         trainingRecords.push({
                             sessionId: sessionId,
-                            trainingType: config.trainingType || 'interval_recognition',
+                            trainingType: getTrainingType(config),
                             playMode: config.playMode || 'harmonic',
                             musicalElement: 'mixed',
                             userAnswer: 'correct',
@@ -122,7 +138,7 @@ export const TrainResult = () => {
                     for (let i = 0; i < progress.wrongNum; i++) {
                         trainingRecords.push({
                             sessionId: sessionId,
-                            trainingType: config.trainingType || 'interval_recognition',
+                            trainingType: getTrainingType(config),
                             playMode: config.playMode || 'harmonic',
                             musicalElement: 'mixed',
                             userAnswer: 'incorrect',
