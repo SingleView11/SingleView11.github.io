@@ -4,7 +4,9 @@ import { authService } from './authService';
 
 // HTTP link to your GraphQL endpoint - use environment variables
 const httpLink = createHttpLink({
-  uri: process.env.REACT_APP_GRAPHQL_URL || 'http://localhost:8080/graphql',
+  uri: process.env.NODE_ENV === 'production' 
+    ? '/api/graphql'  // Always use /api/graphql path in production
+    : (process.env.REACT_APP_GRAPHQL_URL || 'http://localhost:8080/api/graphql'),
 });
 
 // Auth link to add JWT token to requests
