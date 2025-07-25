@@ -1,6 +1,6 @@
 import { ApolloClient, InMemoryCache, createHttpLink } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
-import authService from './authService';
+import { authService } from './authService';
 
 // HTTP link to your GraphQL endpoint
 const httpLink = createHttpLink({

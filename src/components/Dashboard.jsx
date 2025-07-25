@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useRef } from 'react';
+import React, { useState, useContext } from 'react';
 import { 
   Row, 
   Col, 
@@ -11,7 +11,10 @@ import {
   List, 
   Tag,
   Empty,
-  Button
+  Button,
+  Select,
+  DatePicker,
+  Space
 } from 'antd';
 import { 
   TrophyOutlined, 
@@ -20,102 +23,87 @@ import {
   BarChartOutlined,
   SoundOutlined,
   ClockCircleOutlined,
-  LogoutOutlined,
-  PlayCircleOutlined
+  PlayCircleOutlined,
+  LineChartOutlined,
+  ReloadOutlined
 } from '@ant-design/icons';
+import { useQuery } from '@apollo/client';
+import ReactECharts from 'echarts-for-react';
+import dayjs from 'dayjs';
 import { useNavigate } from 'react-router-dom';
-import trainingService from '../services/trainingService';
-import authService from '../services/authService';
+import { GET_DASHBOARD_DATA, GET_RECENT_TRAINING } from '../graphql/queries';
 import { ConfigContext } from './globalStates/ConfigContext';
 import './Dashboard.css';
 
 const { Title, Text } = Typography;
+const { RangePicker } = DatePicker;
+const { Option } = Select;
 
 const Dashboard = () => {
   const { user } = useContext(ConfigContext);
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(true);
-  const [analytics, setAnalytics] = useState(null);
-  const [stats, setStats] = useState(null);
-  const [recentTraining, setRecentTraining] = useState([]);
-  const [sessionSummaries, setSessions] = useState([]);
-  const hasFetched = useRef(false); // Track if we've already fetched data
+  
+  // Performance chart state
+  const [chartTimeRange, setChartTimeRange] = useState('7d');
+  const [chartMode, setChartMode] = useState('accuracy');
+  const [customDateRange, setCustomDateRange] = useState(null);
 
-  useEffect(() => {
-    const fetchDashboardData = async () => {
-      // Prevent duplicate fetches
-      if (hasFetched.current) {
-        console.log('Dashboard data already fetched, skipping...');
-        return;
-      }
-      
-      try {
-        setLoading(true);
-        hasFetched.current = true; // Mark as fetched immediately
-        console.log('Fetching dashboard data for user:', user);
-        
-        // Fetch all dashboard data in parallel
-        console.log('Making API calls...');
-        
-        // Test connection first
-        console.log('Testing API connection...');
-        const testResult = await trainingService.testConnection();
-        console.log('Connection test result:', testResult);
-        
-        if (!testResult.authenticated) {
-          throw new Error('Not authenticated');
-        }
-        
-        if (testResult.error) {
-          throw new Error(`API connection failed: ${JSON.stringify(testResult.error)}`);
-        }
-        
-        const [analyticsData, statsData, recentData, sessionsData] = await Promise.all([
-          trainingService.getUserAnalytics(),
-          trainingService.getTrainingStats(),
-          trainingService.getRecentTraining(10),
-          trainingService.getSessionSummaries(5)
-        ]);
+  // GraphQL query for dashboard data
+  const { loading, error, data, refetch } = useQuery(GET_DASHBOARD_DATA, {
+    skip: !user, // Skip query if user is not logged in
+    fetchPolicy: 'cache-and-network', // Always check for fresh data
+    onCompleted: (data) => {
+      message.success('Dashboard data loaded successfully');
+    },
+    onError: (error) => {
+      console.error('Failed to fetch dashboard data:', error);
+      message.error(`Failed to load dashboard data: ${error.message}`);
+    }
+  });
 
-        console.log('Analytics data:', analyticsData);
-        console.log('Stats data:', statsData);
-        console.log('Recent data:', recentData);
-        console.log('Sessions data:', sessionsData);
+  // Separate query for chart data with more recent training records
+  const { data: chartData, loading: chartLoading, refetch: refetchChart } = useQuery(GET_RECENT_TRAINING, {
+    variables: { limit: 50 }, // Get more data for chart
+    skip: !user,
+    fetchPolicy: 'cache-and-network', // Always check for fresh data
+  });
 
-        setAnalytics(analyticsData);
-        setStats(statsData);
-        setRecentTraining(recentData || []);
-        setSessions(sessionsData || []);
-        
-        message.success('Dashboard data loaded successfully');
-        
-      } catch (error) {
-        console.error('Failed to fetch dashboard data:', error);
-        message.error(`Failed to load dashboard data: ${error.message || 'Unknown error'}`);
-        hasFetched.current = false; // Reset on error to allow retry
-      } finally {
-        setLoading(false);
+  // Refetch data when component becomes visible (e.g., returning from training)
+  React.useEffect(() => {
+    const handleFocus = () => {
+      if (user && !loading && !chartLoading) {
+        refetch();
+        refetchChart();
       }
     };
 
-    if (user && !hasFetched.current) {
-      console.log('User is logged in, fetching dashboard data...');
-      fetchDashboardData();
-    } else {
-      if (!user) {
-        console.log('No user logged in, skipping dashboard data fetch');
-      } else {
-        console.log('Dashboard data already fetched for this user');
-      }
-      setLoading(false);
-    }
-  }, [user]);
+    window.addEventListener('focus', handleFocus);
+    return () => window.removeEventListener('focus', handleFocus);
+  }, [user, loading, chartLoading, refetch, refetchChart]);
 
-  const handleLogout = () => {
-    authService.logout();
-    window.location.reload();
+  // Extract data from GraphQL response
+  const analytics = data?.userAnalytics;
+  console.log('Extracted analytics:', analytics);
+  const stats = {
+    todayCount: data?.todayTrainingCount || 0,
+    weekCount: data?.weekTrainingCount || 0,
+    totalCount: analytics?.typeStats?.reduce((sum, stat) => sum + stat.totalQuestions, 0) || 0
+  };
+  console.log('Calculated stats:', stats);
+  const recentTraining = chartData?.recentTraining || [];
+  const sessionSummaries = data?.sessionSummaries || [];
+  // Refetch function for manual refresh
+  const handleRefresh = async () => {
+    message.loading('Refreshing dashboard...', 0.5);
+    try {
+      await Promise.all([refetch(), refetchChart()]);
+      message.success('Dashboard refreshed successfully!');
+    } catch (err) {
+      message.error('Failed to refresh dashboard');
+    }
   };
 
+  // Utility functions
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       month: 'short',
@@ -140,12 +128,202 @@ const Dashboard = () => {
     return type?.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase()) || 'Training';
   };
 
-  if (loading) {
+  // Generate chart data based on time range and mode
+  const generateChartData = () => {
+    if (!recentTraining || recentTraining.length === 0) {
+      return null;
+    }
+
+    // Filter data based on time range
+    const now = dayjs();
+    let startDate;
+    
+    if (customDateRange && customDateRange.length === 2) {
+      startDate = customDateRange[0];
+    } else {
+      switch (chartTimeRange) {
+        case '7d':
+          startDate = now.subtract(7, 'day');
+          break;
+        case '30d':
+          startDate = now.subtract(30, 'day');
+          break;
+        case '90d':
+          startDate = now.subtract(90, 'day');
+          break;
+        default:
+          startDate = now.subtract(7, 'day');
+      }
+    }
+
+    // Group data by date
+    const dataByDate = {};
+    recentTraining.forEach(item => {
+      const itemDate = dayjs(item.completedAt);
+      if (itemDate.isAfter(startDate)) {
+        const dateKey = itemDate.format('YYYY-MM-DD');
+        if (!dataByDate[dateKey]) {
+          dataByDate[dateKey] = {
+            date: dateKey,
+            total: 0,
+            correct: 0,
+            byType: {}
+          };
+        }
+        
+        dataByDate[dateKey].total++;
+        if (item.isCorrect) {
+          dataByDate[dateKey].correct++;
+        }
+        
+        // Group by training type
+        const type = item.trainingType;
+        if (!dataByDate[dateKey].byType[type]) {
+          dataByDate[dateKey].byType[type] = { total: 0, correct: 0 };
+        }
+        dataByDate[dateKey].byType[type].total++;
+        if (item.isCorrect) {
+          dataByDate[dateKey].byType[type].correct++;
+        }
+      }
+    });
+
+    // Convert to array and sort by date
+    const sortedData = Object.values(dataByDate).sort((a, b) => 
+      dayjs(a.date).isBefore(dayjs(b.date)) ? -1 : 1
+    );
+
+    return sortedData;
+  };
+
+  // Generate ECharts options
+  const getChartOptions = () => {
+    const data = generateChartData();
+    if (!data || data.length === 0) {
+      return null;
+    }
+
+    const dates = data.map(d => dayjs(d.date).format('MMM DD'));
+    
+    let series = [];
+    let yAxisName = '';
+    
+    if (chartMode === 'accuracy') {
+      yAxisName = 'Accuracy (%)';
+      series = [
+        {
+          name: 'Overall Accuracy',
+          type: 'line',
+          data: data.map(d => ((d.correct / d.total) * 100).toFixed(1)),
+          smooth: true,
+          lineStyle: { color: '#1890ff', width: 3 },
+          itemStyle: { color: '#1890ff' }
+        }
+      ];
+      
+      // Add series for each training type
+      const typeColors = {
+        'interval_recognition': '#52c41a',
+        'chord_recognition': '#722ed1',
+        'note_recognition': '#fa8c16',
+        'melody_recognition': '#eb2f96'
+      };
+      
+      Object.keys(typeColors).forEach(type => {
+        const typeData = data.map(d => {
+          if (d.byType[type]) {
+            return ((d.byType[type].correct / d.byType[type].total) * 100).toFixed(1);
+          }
+          return null;
+        });
+        
+        if (typeData.some(d => d !== null)) {
+          series.push({
+            name: formatTrainingType(type),
+            type: 'line',
+            data: typeData,
+            smooth: true,
+            lineStyle: { color: typeColors[type], width: 2 },
+            itemStyle: { color: typeColors[type] }
+          });
+        }
+      });
+    } else if (chartMode === 'volume') {
+      yAxisName = 'Questions';
+      series = [
+        {
+          name: 'Total Questions',
+          type: 'bar',
+          data: data.map(d => d.total),
+          itemStyle: { color: '#1890ff' }
+        },
+        {
+          name: 'Correct Answers',
+          type: 'bar',
+          data: data.map(d => d.correct),
+          itemStyle: { color: '#52c41a' }
+        }
+      ];
+    }
+
+    return {
+      title: {
+        text: `Training Performance - ${chartMode === 'accuracy' ? 'Accuracy' : 'Volume'}`,
+        left: 'center',
+        textStyle: { fontSize: 16, fontWeight: 'bold' }
+      },
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: { type: 'cross' }
+      },
+      legend: {
+        data: series.map(s => s.name),
+        top: '10%'
+      },
+      grid: {
+        left: '3%',
+        right: '4%',
+        bottom: '3%',
+        top: '20%',
+        containLabel: true
+      },
+      xAxis: {
+        type: 'category',
+        boundaryGap: false,
+        data: dates,
+        axisLabel: { rotate: 45 }
+      },
+      yAxis: {
+        type: 'value',
+        name: yAxisName,
+        nameLocation: 'middle',
+        nameGap: 50
+      },
+      series: series,
+      animationDuration: 1000
+    };
+  };
+
+  if (loading || chartLoading) {
     return (
       <div className="dashboard-container">
         <div style={{ textAlign: 'center', padding: '50px' }}>
           <Spin size="large" />
           <Title level={4} style={{ marginTop: 16 }}>Loading your progress...</Title>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="dashboard-container">
+        <div style={{ textAlign: 'center', padding: '50px' }}>
+          <Title level={4} type="danger">Error loading dashboard</Title>
+          <p>{error.message}</p>
+          <Button type="primary" onClick={() => window.location.reload()}>
+            Retry
+          </Button>
         </div>
       </div>
     );
@@ -165,25 +343,28 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="dashboard-container">
-      <div className="dashboard-header">
-        <Title level={2}>
-          🎵 Welcome back, {user?.firstName || user?.username}!
-        </Title>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-          <Text type="secondary">Here's your musical training progress</Text>
+    <div className="dashboard-container" style={{ padding: '24px' }}>
+      <Card>
+        <div className="dashboard-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+          <div>
+            <Title level={2} style={{ margin: 0 }}>
+              🎵 Welcome back, {user?.firstName || user?.username}!
+            </Title>
+            <Text type="secondary">Here's your musical training progress</Text>
+          </div>
           <Button 
-            icon={<LogoutOutlined />} 
-            onClick={handleLogout}
-            type="text"
+            icon={<ReloadOutlined />} 
+            onClick={handleRefresh}
+            loading={loading || chartLoading}
+            type="primary"
+            ghost
           >
-            Logout
+            Refresh
           </Button>
         </div>
-      </div>
 
-      {/* Statistics Cards */}
-      <Row gutter={[16, 16]} style={{ marginBottom: 24 }}>
+        {/* Statistics Cards */}
+        <Row gutter={[16, 16]} style={{ marginBottom: 24, marginTop: 24 }}>
         <Col xs={24} sm={12} md={6}>
           <Card>
             <Statistic
@@ -222,6 +403,66 @@ const Dashboard = () => {
               prefix={<SoundOutlined style={{ color: '#722ed1' }} />}
               suffix=" practiced"
             />
+          </Card>
+        </Col>
+      </Row>
+
+      {/* Performance Chart */}
+      <Row style={{ marginBottom: 24 }}>
+        <Col span={24}>
+          <Card 
+            title={<><LineChartOutlined /> Performance Analytics</>} 
+            className="dashboard-card"
+            extra={
+              <Space>
+                <Select
+                  value={chartMode}
+                  onChange={setChartMode}
+                  style={{ width: 120 }}
+                >
+                  <Option value="accuracy">Accuracy</Option>
+                  <Option value="volume">Volume</Option>
+                </Select>
+                <Select
+                  value={chartTimeRange}
+                  onChange={(value) => {
+                    setChartTimeRange(value);
+                    if (value !== 'custom') {
+                      setCustomDateRange(null);
+                    }
+                  }}
+                  style={{ width: 100 }}
+                >
+                  <Option value="7d">7 Days</Option>
+                  <Option value="30d">30 Days</Option>
+                  <Option value="90d">90 Days</Option>
+                  <Option value="custom">Custom</Option>
+                </Select>
+                {chartTimeRange === 'custom' && (
+                  <RangePicker
+                    value={customDateRange}
+                    onChange={setCustomDateRange}
+                    format="YYYY-MM-DD"
+                  />
+                )}
+              </Space>
+            }
+          >
+            {recentTraining.length > 0 ? (
+              <div style={{ height: '400px' }}>
+                <ReactECharts 
+                  option={getChartOptions()} 
+                  style={{ height: '100%', width: '100%' }}
+                  opts={{ renderer: 'canvas' }}
+                />
+              </div>
+            ) : (
+              <Empty 
+                description="No training data available for chart"
+                image={Empty.PRESENTED_IMAGE_SIMPLE}
+                style={{ padding: '60px 0' }}
+              />
+            )}
           </Card>
         </Col>
       </Row>
@@ -371,6 +612,7 @@ const Dashboard = () => {
           </Button>
         </Col>
       </Row>
+      </Card>
     </div>
   );
 };

@@ -120,7 +120,7 @@ export const GET_DASHBOARD_DATA = gql`
         accuracy
       }
     }
-    recentTraining(limit: 5) {
+    recentTraining(limit: 8) {
       id
       trainingType
       musicalElement
@@ -129,7 +129,7 @@ export const GET_DASHBOARD_DATA = gql`
     }
     todayTrainingCount
     weekTrainingCount
-    sessionSummaries(limit: 3) {
+    sessionSummaries(limit: 5) {
       sessionId
       sessionStart
       questionCount

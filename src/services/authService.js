@@ -49,6 +49,33 @@ export const authService = {
     }
   },
 
+  // OAuth2 Google login
+  loginWithGoogle: () => {
+    window.location.href = `${API_BASE_URL}/oauth2/authorization/google`;
+  },
+
+  // Handle OAuth2 redirect
+  handleOAuth2Redirect: (token) => {
+    if (token) {
+      localStorage.setItem('jwtToken', token);
+      localStorage.setItem('token', token);
+      
+      // Decode JWT to get user info (basic decode, not verification)
+      try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        const user = {
+          username: payload.sub,
+          email: payload.sub,
+        };
+        localStorage.setItem('user', JSON.stringify(user));
+        return user;
+      } catch (error) {
+        console.error('Failed to decode token:', error);
+      }
+    }
+    return null;
+  },
+
   // Logout user
   logout: () => {
     localStorage.removeItem('jwtToken');
