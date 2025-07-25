@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/pitchperfecter/static/css/main.390a80be.css",
-    "main.js": "/pitchperfecter/static/js/main.9b9fdd30.js",
-    "index.html": "/pitchperfecter/index.html",
-    "main.390a80be.css.map": "/pitchperfecter/static/css/main.390a80be.css.map",
-    "main.9b9fdd30.js.map": "/pitchperfecter/static/js/main.9b9fdd30.js.map"
+    "main.css": "https://SingleView11.github.io/pitchperfecter/static/css/main.390a80be.css",
+    "main.js": "https://SingleView11.github.io/pitchperfecter/static/js/main.a3473425.js",
+    "index.html": "https://SingleView11.github.io/pitchperfecter/index.html",
+    "main.390a80be.css.map": "https://SingleView11.github.io/pitchperfecter/static/css/main.390a80be.css.map",
+    "main.a3473425.js.map": "https://SingleView11.github.io/pitchperfecter/static/js/main.a3473425.js.map"
   },
   "entrypoints": [
     "static/css/main.390a80be.css",
-    "static/js/main.9b9fdd30.js"
+    "static/js/main.a3473425.js"
   ]
 }
