@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Base URL for your backend - use environment variables
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8080';
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8080/api';
 
 // Create axios instance with default config
 const authAPI = axios.create({
@@ -16,7 +16,7 @@ export const authService = {
   // Register new user
   register: async (userData) => {
     try {
-      const response = await authAPI.post('/api/auth/register', userData);
+      const response = await authAPI.post('/auth/register', userData);
       
       // Store JWT token in localStorage with consistent keys
       if (response.data.token) {
@@ -34,7 +34,7 @@ export const authService = {
   // Login user
   login: async (credentials) => {
     try {
-      const response = await authAPI.post('/api/auth/login', credentials);
+      const response = await authAPI.post('/auth/login', credentials);
       
       // Store JWT token in localStorage with consistent keys
       if (response.data.token) {
@@ -112,7 +112,7 @@ export const authService = {
         throw new Error('No token found');
       }
       
-      const response = await authAPI.get('/api/user/profile', {
+      const response = await authAPI.get('/user/profile', {
         headers: {
           'Authorization': `Bearer ${token}`
         }
