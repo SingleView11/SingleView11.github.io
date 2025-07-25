@@ -1,11 +1,11 @@
 import axios from 'axios';
 
 // Base URL for your backend - use environment variables
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8080/api';
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8080';
 
 // Create axios instance with default config
 const authAPI = axios.create({
-  baseURL: API_BASE_URL,
+  baseURL: `${API_BASE_URL}/api`,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -47,33 +47,6 @@ export const authService = {
     } catch (error) {
       throw error.response?.data || { message: 'Login failed' };
     }
-  },
-
-  // OAuth2 Google login
-  loginWithGoogle: () => {
-    window.location.href = `${API_BASE_URL}/oauth2/authorization/google`;
-  },
-
-  // Handle OAuth2 redirect
-  handleOAuth2Redirect: (token) => {
-    if (token) {
-      localStorage.setItem('jwtToken', token);
-      localStorage.setItem('token', token);
-      
-      // Decode JWT to get user info (basic decode, not verification)
-      try {
-        const payload = JSON.parse(atob(token.split('.')[1]));
-        const user = {
-          username: payload.sub,
-          email: payload.sub,
-        };
-        localStorage.setItem('user', JSON.stringify(user));
-        return user;
-      } catch (error) {
-        console.error('Failed to decode token:', error);
-      }
-    }
-    return null;
   },
 
   // Logout user
