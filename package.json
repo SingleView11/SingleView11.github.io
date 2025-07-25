@@ -2,7 +2,7 @@
   "name": "pitchperfecter",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://SingleView11.github.io/#",
+  "homepage": "https://SingleView11.github.io/",
   "dependencies": {
     "@apollo/client": "^3.13.8",
     "@testing-library/jest-dom": "^5.17.0",
