@@ -11,6 +11,25 @@ import { ProgressCardList, getProgressInfos } from '../uiItems/TrainCardList';
 import { ProgressFigureOneLine } from '../uiItems/ProgressBar';
 import trainingService from '../../services/trainingService';
 
+// Robust UUID generator that works in all browsers
+const generateUUID = () => {
+    try {
+        // Try native crypto.randomUUID first
+        if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+            return crypto.randomUUID();
+        }
+    } catch (error) {
+        console.warn('crypto.randomUUID not available:', error);
+    }
+    
+    // Fallback UUID v4 generator
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        const r = Math.random() * 16 | 0;
+        const v = c === 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
+};
+
 export const TrainResult = () => {
     const { trainState, setTrainState, progress, setProgress, config, setConfig, user } = useContext(ConfigContext)
     const [progressInfos, setProgressInfos] = useState(getProgressInfos(progress, config))
@@ -35,20 +54,36 @@ export const TrainResult = () => {
 
     // Save training results when component mounts (session completed)
     useEffect(() => {
+        console.log('🔥 TrainResult useEffect RUNNING - this should appear when component loads');
+        
         const saveTrainingResults = async () => {
-            console.log('TrainResult: useEffect triggered, user:', user, 'hasSaved:', hasSaved.current, 'isSaving:', isSaving);
+            console.log('=== TrainResult: useEffect triggered ===');
+            console.log('User:', user);
+            console.log('hasSaved.current:', hasSaved.current);
+            console.log('isSaving:', isSaving);
+            console.log('Progress:', progress);
+            console.log('Config:', config);
             
             // Only save if user is logged in and we haven't saved yet
-            if (!user || hasSaved.current || isSaving) {
-                if (!user) console.log('Guest user - training results not saved');
-                if (hasSaved.current) console.log('Already saved, skipping...');
-                if (isSaving) console.log('Currently saving, skipping...');
+            if (!user) {
+                console.log('❌ No user - training results not saved');
+                message.warning('Please login to save training results');
+                return;
+            }
+            
+            if (hasSaved.current) {
+                console.log('❌ Already saved, skipping...');
+                return;
+            }
+            
+            if (isSaving) {
+                console.log('❌ Currently saving, skipping...');
                 return;
             }
             
             hasSaved.current = true; // Mark as saved immediately to prevent duplicates
             setIsSaving(true);
-            console.log('Starting to save training results...');
+            console.log('✅ Starting to save training results...');
             console.log('Progress data:', progress);
             console.log('Config data:', config);
 
@@ -66,27 +101,7 @@ export const TrainResult = () => {
             }
 
             try {
-                // Create a unique key for this training session to prevent duplicate saves
-                const trainingHash = `${user.id}_${progress.rightNum}_${progress.wrongNum}_${JSON.stringify(Array.from(progress.rightSounds || new Map()))}_${JSON.stringify(Array.from(progress.wrongSounds || new Map()))}`;
-                const sessionKey = `saved_session_${btoa(trainingHash).slice(0, 20)}`; // Create shorter key
-                
-                if (localStorage.getItem(sessionKey)) {
-                    console.log('Training session already saved, skipping...');
-                    return;
-                }
-                
-                // Generate a session ID for this training session (with polyfill for older browsers)
-                const generateUUID = () => {
-                    if (crypto && crypto.randomUUID) {
-                        return crypto.randomUUID();
-                    }
-                    // Fallback UUID v4 generator for browsers without crypto.randomUUID
-                    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-                        const r = Math.random() * 16 | 0;
-                        const v = c === 'x' ? r : (r & 0x3 | 0x8);
-                        return v.toString(16);
-                    });
-                };
+                // Generate a session ID for this training session
                 const sessionId = generateUUID();
                 
                 // Create training records for each question answered
@@ -189,9 +204,6 @@ export const TrainResult = () => {
                 if (successCount > 0) {
                     message.success(`Training session saved! ${successCount} questions recorded.`);
                     console.log(`Saved training session with ${successCount} records`);
-                    
-                    // Mark this session as saved in localStorage to prevent duplicates
-                    localStorage.setItem(sessionKey, 'true');
                 } else {
                     throw new Error('No records were saved successfully');
                 }
@@ -207,12 +219,18 @@ export const TrainResult = () => {
         };
 
         // Only save once when component mounts and user is logged in
-        console.log('useEffect dependencies - user:', user, 'hasSaved:', hasSaved.current);
-        if (user && !hasSaved.current) {
-            console.log('Calling saveTrainingResults...');
+        console.log('=== useEffect dependencies check ===');
+        console.log('user:', user);
+        console.log('hasSaved.current:', hasSaved.current);
+        console.log('progress.rightNum + progress.wrongNum:', progress.rightNum + progress.wrongNum);
+        
+        if (user && !hasSaved.current && (progress.rightNum + progress.wrongNum > 0)) {
+            console.log('✅ Conditions met - calling saveTrainingResults...');
             saveTrainingResults();
+        } else {
+            console.log('❌ Conditions not met for saving');
         }
-    }, [user]); // Only depend on user
+    }, [user, progress.rightNum, progress.wrongNum]); // Depend on user and progress
 
     const restartTrain = () => {
         setProgress(generateInitProgress())
@@ -275,7 +293,91 @@ export const TrainResult = () => {
                     <Button type="info" style={{ margin: 10 }} block onClick={reConfigTrain} >Return to Config Page</Button>
 
                     {user && (
-                        <Button type="default" style={{ margin: 10 }} block onClick={testDashboardAPIs} >Test Dashboard APIs</Button>
+                        <>
+                            <Button type="default" style={{ margin: 10 }} block onClick={testDashboardAPIs} >Test Dashboard APIs</Button>
+                            <Button 
+                                type="default" 
+                                style={{ margin: 10 }} 
+                                block 
+                                loading={isSaving}
+                                onClick={async () => {
+                                    console.log('=== MANUAL SAVE STARTED ===');
+                                    
+                                    // Reset save state to allow manual save
+                                    hasSaved.current = false;
+                                    setIsSaving(true);
+                                    
+                                    try {
+                                        // First test the connection/authentication
+                                        console.log('Testing API connection...');
+                                        const testResult = await trainingService.testConnection();
+                                        console.log('Connection test result:', testResult);
+                                        
+                                        if (!testResult.authenticated) {
+                                            throw new Error('Not authenticated');
+                                        }
+                                        
+                                        // Generate UUID and create records
+                                        const sessionId = generateUUID();
+                                        console.log('Generated sessionId:', sessionId);
+                                        
+                                        const trainingRecords = [];
+                                        const totalQuestions = progress.rightNum + progress.wrongNum;
+                                        console.log('Total questions:', totalQuestions);
+                                        
+                                        // Create records for right answers
+                                        for (let i = 0; i < progress.rightNum; i++) {
+                                            trainingRecords.push({
+                                                sessionId: sessionId,
+                                                trainingType: getTrainingType(config),
+                                                playMode: config.playMode || 'harmonic',
+                                                musicalElement: 'mixed',
+                                                userAnswer: 'correct',
+                                                isCorrect: true
+                                            });
+                                        }
+                                        
+                                        // Create records for wrong answers
+                                        for (let i = 0; i < progress.wrongNum; i++) {
+                                            trainingRecords.push({
+                                                sessionId: sessionId,
+                                                trainingType: getTrainingType(config),
+                                                playMode: config.playMode || 'harmonic',
+                                                musicalElement: 'mixed',
+                                                userAnswer: 'incorrect',
+                                                isCorrect: false
+                                            });
+                                        }
+                                        
+                                        console.log('Training records to save:', trainingRecords);
+                                        
+                                        if (trainingRecords.length === 0) {
+                                            message.warning('No training data to save');
+                                            return;
+                                        }
+                                        
+                                        // Save records
+                                        const savePromises = trainingRecords.map(record => 
+                                            trainingService.saveTrainingRecord(record)
+                                        );
+                                        
+                                        const results = await Promise.all(savePromises);
+                                        console.log('Save results:', results);
+                                        
+                                        message.success(`Manually saved ${results.length} training records!`);
+                                        hasSaved.current = true;
+                                        
+                                    } catch (error) {
+                                        console.error('Manual save failed:', error);
+                                        message.error(`Manual save failed: ${error.message}`);
+                                    } finally {
+                                        setIsSaving(false);
+                                    }
+                                }}
+                            >
+                                {isSaving ? 'Saving...' : 'Manual Save Training Results'}
+                            </Button>
+                        </>
                     )}
 
                 </Row>
