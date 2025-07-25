@@ -81,6 +81,17 @@ const Dashboard = () => {
     return () => window.removeEventListener('focus', handleFocus);
   }, [user, loading, chartLoading, refetch, refetchChart]);
 
+  // Refetch data when user changes (after login)
+  React.useEffect(() => {
+    if (user) {
+      // Small delay to ensure token is properly available
+      setTimeout(() => {
+        refetch();
+        refetchChart();
+      }, 200);
+    }
+  }, [user, refetch, refetchChart]);
+
   // Extract data from GraphQL response
   const analytics = data?.userAnalytics;
   console.log('Extracted analytics:', analytics);

@@ -75,8 +75,19 @@ export const TrainResult = () => {
                     return;
                 }
                 
-                // Generate a session ID for this training session
-                const sessionId = crypto.randomUUID();
+                // Generate a session ID for this training session (with polyfill for older browsers)
+                const generateUUID = () => {
+                    if (crypto && crypto.randomUUID) {
+                        return crypto.randomUUID();
+                    }
+                    // Fallback UUID v4 generator for browsers without crypto.randomUUID
+                    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                        const r = Math.random() * 16 | 0;
+                        const v = c === 'x' ? r : (r & 0x3 | 0x8);
+                        return v.toString(16);
+                    });
+                };
+                const sessionId = generateUUID();
                 
                 // Create training records for each question answered
                 const trainingRecords = [];

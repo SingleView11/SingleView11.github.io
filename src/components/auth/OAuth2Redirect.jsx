@@ -1,6 +1,7 @@
 import React, { useEffect, useContext } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { Spin, message } from 'antd';
+import { useApolloClient } from '@apollo/client';
 import { authService } from '../../services/authService';
 import { ConfigContext } from '../globalStates/ConfigContext';
 
@@ -8,6 +9,7 @@ const OAuth2Redirect = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { setUser } = useContext(ConfigContext);
+  const apolloClient = useApolloClient();
 
   useEffect(() => {
     const handleOAuth2Redirect = async () => {
@@ -27,8 +29,17 @@ const OAuth2Redirect = () => {
           
           if (user) {
             setUser(user);
+            // Clear Apollo cache to ensure fresh data with new auth token
+            try {
+              await apolloClient.clearStore();
+            } catch (cacheError) {
+              console.warn('Failed to clear Apollo cache:', cacheError);
+            }
             message.success('Successfully logged in with Google!');
-            navigate('/dashboard');
+            // Add a small delay to ensure token is properly stored
+            setTimeout(() => {
+              navigate('/dashboard');
+            }, 100);
           } else {
             message.error('Failed to process authentication');
             navigate('/auth');
