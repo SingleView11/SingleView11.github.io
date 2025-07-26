@@ -116,8 +116,7 @@ export const TrainResult = () => {
 
                     <Button type="info" style={{ margin: 10 }} block onClick={reConfigTrain} >Return to Config Page</Button>
 
-                    {/* Commented out to prevent duplicate saves and UI confusion */}
-                    {/* {user && (
+                    {user && (
                         <>
                             <Button type="default" style={{ margin: 10 }} block onClick={testDashboardAPIs} >Test Dashboard APIs</Button>
                             <Button 
@@ -208,7 +207,7 @@ export const TrainResult = () => {
                                 {isSaving ? 'Saving...' : (hasSaved.current ? 'Already Saved' : 'Save Training Results')}
                             </Button>
                         </>
-                    )} */}
+                    )}
 
                 </Row>
             </Content>
