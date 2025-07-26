@@ -117,7 +117,7 @@ export const TrainResult = () => {
                     <Button type="info" style={{ margin: 10 }} block onClick={reConfigTrain} >Return to Config Page</Button>
 
                     
-                    {true && (
+                    {user && (
                         <>
                             {/* <Button type="default" style={{ margin: 10 }} block onClick={testDashboardAPIs} >Test Dashboard APIs</Button> */}
                             <Button 
