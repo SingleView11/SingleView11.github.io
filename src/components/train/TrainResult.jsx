@@ -35,6 +35,7 @@ export const TrainResult = () => {
     const [progressInfos, setProgressInfos] = useState(getProgressInfos(progress, config))
     const [isSaving, setIsSaving] = useState(false)
     const hasSaved = useRef(false) // Track if we've already saved
+    const sessionStartTime = useRef(Date.now()) // Unique timestamp for this session
 
     // Function to determine the correct training type based on config
     const getTrainingType = (config) => {
@@ -67,7 +68,6 @@ export const TrainResult = () => {
             // Only save if user is logged in and we haven't saved yet
             if (!user) {
                 console.log('❌ No user - training results not saved');
-                message.warning('Please login to save training results');
                 return;
             }
             
@@ -78,6 +78,16 @@ export const TrainResult = () => {
             
             if (isSaving) {
                 console.log('❌ Currently saving, skipping...');
+                return;
+            }
+            
+            // Create a unique session key based on session start time and progress data
+            const sessionKey = `training_saved_${sessionStartTime.current}_${progress.rightNum}_${progress.wrongNum}`;
+            const alreadySaved = sessionStorage.getItem(sessionKey);
+            
+            if (alreadySaved) {
+                console.log('❌ This training session already saved, skipping...');
+                hasSaved.current = true;
                 return;
             }
             
@@ -204,6 +214,10 @@ export const TrainResult = () => {
                 if (successCount > 0) {
                     message.success(`Training session saved! ${successCount} questions recorded.`);
                     console.log(`Saved training session with ${successCount} records`);
+                    
+                    // Mark this session as saved in sessionStorage
+                    const sessionKey = `training_saved_${sessionStartTime.current}_${progress.rightNum}_${progress.wrongNum}`;
+                    sessionStorage.setItem(sessionKey, 'true');
                 } else {
                     throw new Error('No records were saved successfully');
                 }
@@ -233,6 +247,9 @@ export const TrainResult = () => {
     }, [user, progress.rightNum, progress.wrongNum]); // Depend on user and progress
 
     const restartTrain = () => {
+        // Reset save state and session time for new training session
+        hasSaved.current = false;
+        sessionStartTime.current = Date.now();
         setProgress(generateInitProgress())
         setTrainState(1)
     }
