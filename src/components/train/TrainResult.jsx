@@ -154,30 +154,36 @@ export const TrainResult = () => {
                                         console.log('Generated sessionId:', sessionId);
                                         
                                         const trainingRecords = [];
-                                        const totalQuestions = progress.rightNum + progress.wrongNum;
-                                        console.log('Total questions:', totalQuestions);
                                         
-                                        // Create records for right answers
-                                        for (let i = 0; i < progress.rightNum; i++) {
-                                            trainingRecords.push({
-                                                sessionId: sessionId,
-                                                trainingType: getTrainingType(config),
-                                                playMode: config.playMode || 'harmonic',
-                                                musicalElement: 'mixed',
-                                                userAnswer: 'correct',
-                                                isCorrect: true
+                                        // Create records from rightSounds Map
+                                        if (progress.rightSounds && progress.rightSounds instanceof Map) {
+                                            progress.rightSounds.forEach((count, soundName) => {
+                                                for (let i = 0; i < count; i++) {
+                                                    trainingRecords.push({
+                                                        sessionId: sessionId,
+                                                        trainingType: getTrainingType(config),
+                                                        playMode: config.playMode || 'harmonic',
+                                                        musicalElement: soundName,
+                                                        userAnswer: 'correct',
+                                                        isCorrect: true
+                                                    });
+                                                }
                                             });
                                         }
                                         
-                                        // Create records for wrong answers
-                                        for (let i = 0; i < progress.wrongNum; i++) {
-                                            trainingRecords.push({
-                                                sessionId: sessionId,
-                                                trainingType: getTrainingType(config),
-                                                playMode: config.playMode || 'harmonic',
-                                                musicalElement: 'mixed',
-                                                userAnswer: 'incorrect',
-                                                isCorrect: false
+                                        // Create records from wrongSounds Map
+                                        if (progress.wrongSounds && progress.wrongSounds instanceof Map) {
+                                            progress.wrongSounds.forEach((count, soundName) => {
+                                                for (let i = 0; i < count; i++) {
+                                                    trainingRecords.push({
+                                                        sessionId: sessionId,
+                                                        trainingType: getTrainingType(config),
+                                                        playMode: config.playMode || 'harmonic',
+                                                        musicalElement: soundName,
+                                                        userAnswer: 'incorrect',
+                                                        isCorrect: false
+                                                    });
+                                                }
                                             });
                                         }
                                         
