@@ -53,199 +53,6 @@ export const TrainResult = () => {
         return typeMapping[config.type] || 'interval_recognition';
     };
 
-    // Save training results when component mounts (session completed)
-    useEffect(() => {
-        console.log('🔥 TrainResult useEffect RUNNING - this should appear when component loads');
-        
-        const saveTrainingResults = async () => {
-            console.log('=== TrainResult: useEffect triggered ===');
-            console.log('User:', user);
-            console.log('hasSaved.current:', hasSaved.current);
-            console.log('isSaving:', isSaving);
-            console.log('Progress:', progress);
-            console.log('Config:', config);
-            
-            // Only save if user is logged in and we haven't saved yet
-            if (!user) {
-                console.log('❌ No user - training results not saved');
-                return;
-            }
-            
-            if (hasSaved.current) {
-                console.log('❌ Already saved, skipping...');
-                return;
-            }
-            
-            if (isSaving) {
-                console.log('❌ Currently saving, skipping...');
-                return;
-            }
-            
-            // Create a unique session key based on session start time and progress data
-            const sessionKey = `training_saved_${sessionStartTime.current}_${progress.rightNum}_${progress.wrongNum}`;
-            const alreadySaved = sessionStorage.getItem(sessionKey);
-            
-            if (alreadySaved) {
-                console.log('❌ This training session already saved, skipping...');
-                hasSaved.current = true;
-                return;
-            }
-            
-            hasSaved.current = true; // Mark as saved immediately to prevent duplicates
-            setIsSaving(true);
-            console.log('✅ Starting to save training results...');
-            console.log('Progress data:', progress);
-            console.log('Config data:', config);
-
-            // First test the connection/authentication
-            console.log('Testing API connection...');
-            const testResult = await trainingService.testConnection();
-            console.log('Connection test result:', testResult);
-            
-            if (!testResult.authenticated) {
-                throw new Error('Not authenticated');
-            }
-            
-            if (testResult.error) {
-                throw new Error(`API connection failed: ${JSON.stringify(testResult.error)}`);
-            }
-
-            try {
-                // Generate a session ID for this training session
-                const sessionId = generateUUID();
-                
-                // Create training records for each question answered
-                const trainingRecords = [];
-                
-                // Extract training data from progress and config
-                const totalQuestions = progress.rightNum + progress.wrongNum;
-                console.log('Total questions:', totalQuestions);
-                
-                // For each question, we need to reconstruct the training record
-                // Since we don't have individual question data, we'll create aggregate records
-                if (progress.rightSounds && progress.rightSounds.size > 0) {
-                    console.log('Processing right sounds:', progress.rightSounds);
-                    for (const [musicalElement, count] of progress.rightSounds.entries()) {
-                        for (let i = 0; i < count; i++) {
-                            trainingRecords.push({
-                                sessionId: sessionId, // UUID string
-                                trainingType: getTrainingType(config),
-                                playMode: config.playMode || 'harmonic',
-                                musicalElement: String(musicalElement), // Ensure string
-                                userAnswer: String(musicalElement), // Ensure string, correct answer
-                                isCorrect: true // Boolean
-                            });
-                        }
-                    }
-                }
-                
-                if (progress.wrongSounds && progress.wrongSounds.size > 0) {
-                    console.log('Processing wrong sounds:', progress.wrongSounds);
-                    for (const [musicalElement, count] of progress.wrongSounds.entries()) {
-                        for (let i = 0; i < count; i++) {
-                            trainingRecords.push({
-                                sessionId: sessionId,
-                                trainingType: getTrainingType(config),
-                                playMode: config.playMode || 'harmonic',
-                                musicalElement: String(musicalElement),
-                                userAnswer: 'unknown', // We don't track wrong answers specifically
-                                isCorrect: false
-                            });
-                        }
-                    }
-                }
-
-                // If no detailed sound data, create summary records
-                if (trainingRecords.length === 0 && totalQuestions > 0) {
-                    console.log('No detailed sound data, creating summary records');
-                    // Create records for correct answers
-                    for (let i = 0; i < progress.rightNum; i++) {
-                        trainingRecords.push({
-                            sessionId: sessionId,
-                            trainingType: getTrainingType(config),
-                            playMode: config.playMode || 'harmonic',
-                            musicalElement: 'mixed',
-                            userAnswer: 'correct',
-                            isCorrect: true
-                        });
-                    }
-                    
-                    // Create records for wrong answers
-                    for (let i = 0; i < progress.wrongNum; i++) {
-                        trainingRecords.push({
-                            sessionId: sessionId,
-                            trainingType: getTrainingType(config),
-                            playMode: config.playMode || 'harmonic',
-                            musicalElement: 'mixed',
-                            userAnswer: 'incorrect',
-                            isCorrect: false
-                        });
-                    }
-                }
-
-                console.log('Generated training records:', trainingRecords);
-
-                if (trainingRecords.length === 0) {
-                    console.log('No training records to save');
-                    message.info('No training data to save');
-                    return;
-                }
-
-                // Save all training records
-                console.log('Saving training records to backend...');
-                const savePromises = trainingRecords.map(record => 
-                    trainingService.saveTrainingRecord(record)
-                        .then(result => {
-                            console.log('Successfully saved record:', result);
-                            return result;
-                        })
-                        .catch(error => {
-                            console.error('Failed to save individual record:', error);
-                            return null; // Continue with other saves
-                        })
-                );
-                
-                const results = await Promise.all(savePromises);
-                const successCount = results.filter(result => result !== null).length;
-                
-                console.log('Save results:', results);
-                console.log('Success count:', successCount);
-                
-                if (successCount > 0) {
-                    message.success(`Training session saved! ${successCount} questions recorded.`);
-                    console.log(`Saved training session with ${successCount} records`);
-                    
-                    // Mark this session as saved in sessionStorage
-                    const sessionKey = `training_saved_${sessionStartTime.current}_${progress.rightNum}_${progress.wrongNum}`;
-                    sessionStorage.setItem(sessionKey, 'true');
-                } else {
-                    throw new Error('No records were saved successfully');
-                }
-                
-            } catch (error) {
-                console.error('Failed to save training results:', error);
-                // Always show error message for debugging
-                message.error(`Failed to save training results: ${error.message || 'Unknown error'}`);
-            } finally {
-                setIsSaving(false);
-                console.log('Finished saving training results');
-            }
-        };
-
-        // Only save once when component mounts and user is logged in
-        console.log('=== useEffect dependencies check ===');
-        console.log('user:', user);
-        console.log('hasSaved.current:', hasSaved.current);
-        console.log('progress.rightNum + progress.wrongNum:', progress.rightNum + progress.wrongNum);
-        
-        if (user && !hasSaved.current && (progress.rightNum + progress.wrongNum > 0)) {
-            console.log('✅ Conditions met - calling saveTrainingResults...');
-            saveTrainingResults();
-        } else {
-            console.log('❌ Conditions not met for saving');
-        }
-    }, [user, progress.rightNum, progress.wrongNum]); // Depend on user and progress
-
     const restartTrain = () => {
         // Reset save state and session time for new training session
         hasSaved.current = false;
@@ -318,11 +125,16 @@ export const TrainResult = () => {
                                 style={{ margin: 10 }} 
                                 block 
                                 loading={isSaving}
+                                disabled={hasSaved.current}
                                 onClick={async () => {
                                     console.log('=== MANUAL SAVE STARTED ===');
                                     
-                                    // Reset save state to allow manual save
-                                    hasSaved.current = false;
+                                    // Check if already saved
+                                    if (hasSaved.current) {
+                                        message.info('Training results already saved!');
+                                        return;
+                                    }
+                                    
                                     setIsSaving(true);
                                     
                                     try {
@@ -382,8 +194,8 @@ export const TrainResult = () => {
                                         const results = await Promise.all(savePromises);
                                         console.log('Save results:', results);
                                         
-                                        message.success(`Manually saved ${results.length} training records!`);
-                                        hasSaved.current = true;
+                                        message.success(`Successfully saved ${results.length} training records!`);
+                                        hasSaved.current = true; // Disable button after successful save
                                         
                                     } catch (error) {
                                         console.error('Manual save failed:', error);
@@ -393,7 +205,7 @@ export const TrainResult = () => {
                                     }
                                 }}
                             >
-                                {isSaving ? 'Saving...' : 'Manual Save Training Results'}
+                                {isSaving ? 'Saving...' : (hasSaved.current ? 'Already Saved' : 'Save Training Results')}
                             </Button>
                         </>
                     )} */}
