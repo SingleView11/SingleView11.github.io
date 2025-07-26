@@ -2,11 +2,11 @@ import axios from 'axios';
 import authService from './authService';
 
 // Base URL for your backend - use environment variables
-const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || (process.env.NODE_ENV === 'production' ? '' : 'http://localhost:8080');
+const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || 'http://localhost:8080';
 
 // Create axios instance with default config
 const trainingAPI = axios.create({
-  baseURL: `${API_BASE_URL}/api`,
+  baseURL: API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -56,8 +56,8 @@ export const trainingService = {
         return { authenticated: false };
       }
 
-      console.log('Making test request to /training/stats');
-      const response = await trainingAPI.get('/training/stats');
+      console.log('Making test request to /api/training/stats');
+      const response = await trainingAPI.get('/api/training/stats');
       console.log('Test connection successful:', response.data);
       return { authenticated: true, data: response.data };
     } catch (error) {
@@ -76,7 +76,7 @@ export const trainingService = {
         return null;
       }
 
-      const response = await trainingAPI.post('/training/session', sessionData);
+      const response = await trainingAPI.post('/api/training/session', sessionData);
       return response.data;
     } catch (error) {
       console.error('Failed to save training session:', error);
@@ -95,8 +95,8 @@ export const trainingService = {
         return null;
       }
 
-      console.log('Making POST request to /training/record');
-      const response = await trainingAPI.post('/training/record', recordData);
+      console.log('Making POST request to /api/training/record');
+      const response = await trainingAPI.post('/api/training/record', recordData);
       console.log('Save training record response:', response.data);
       return response.data;
     } catch (error) {
@@ -117,8 +117,8 @@ export const trainingService = {
         return null;
       }
 
-      console.log('Making GET request to /training/analytics');
-      const response = await trainingAPI.get('/training/analytics');
+      console.log('Making GET request to /api/training/analytics');
+      const response = await trainingAPI.get('/api/training/analytics');
       console.log('Get analytics response:', response.data);
       return response.data;
     } catch (error) {
@@ -136,7 +136,7 @@ export const trainingService = {
         return [];
       }
 
-      const response = await trainingAPI.get(`/training/recent?limit=${limit}`);
+      const response = await trainingAPI.get(`/api/training/recent?limit=${limit}`);
       return response.data;
     } catch (error) {
       console.error('Failed to get recent training:', error);
@@ -154,8 +154,8 @@ export const trainingService = {
         return null;
       }
 
-      console.log('Making GET request to /training/stats');
-      const response = await trainingAPI.get('/training/stats');
+      console.log('Making GET request to /api/training/stats');
+      const response = await trainingAPI.get('/api/training/stats');
       console.log('Get stats response:', response.data);
       return response.data;
     } catch (error) {
@@ -173,7 +173,7 @@ export const trainingService = {
         return [];
       }
 
-      const response = await trainingAPI.get(`/training/sessions?limit=${limit}`);
+      const response = await trainingAPI.get(`/api/training/sessions?limit=${limit}`);
       return response.data;
     } catch (error) {
       console.error('Failed to get session summaries:', error);
@@ -188,7 +188,7 @@ export const trainingService = {
         return {};
       }
 
-      const response = await trainingAPI.get(`/training/accuracy/${trainingType}`);
+      const response = await trainingAPI.get(`/api/training/accuracy/${trainingType}`);
       return response.data;
     } catch (error) {
       console.error('Failed to get element accuracy:', error);

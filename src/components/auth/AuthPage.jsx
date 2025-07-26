@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Form, Input, Button, Card, Typography, Row, Col, message, Tabs } from 'antd';
-import { UserOutlined, LockOutlined, MailOutlined } from '@ant-design/icons';
+import { Form, Input, Button, Card, Typography, Row, Col, message, Tabs, Divider } from 'antd';
+import { UserOutlined, LockOutlined, MailOutlined, GoogleOutlined } from '@ant-design/icons';
 import { authService } from '../../services/authService';
 import './AuthPage.css';
 
@@ -29,6 +29,10 @@ const AuthPage = ({ onAuthSuccess }) => {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleGoogleLogin = () => {
+    authService.loginWithGoogle();
   };
 
   const handleRegister = async (values) => {
@@ -124,6 +128,24 @@ const AuthPage = ({ onAuthSuccess }) => {
                       className="auth-button"
                     >
                       Login
+                    </Button>
+                  </Form.Item>
+
+                  <Divider>or</Divider>
+
+                  <Form.Item>
+                    <Button
+                      icon={<GoogleOutlined />}
+                      onClick={handleGoogleLogin}
+                      block
+                      className="google-auth-button"
+                      style={{
+                        backgroundColor: '#4285f4',
+                        borderColor: '#4285f4',
+                        color: 'white'
+                      }}
+                    >
+                      Continue with Google
                     </Button>
                   </Form.Item>
 
@@ -248,6 +270,24 @@ const AuthPage = ({ onAuthSuccess }) => {
                       className="auth-button"
                     >
                       Create Account
+                    </Button>
+                  </Form.Item>
+
+                  <Divider>or</Divider>
+
+                  <Form.Item>
+                    <Button
+                      icon={<GoogleOutlined />}
+                      onClick={handleGoogleLogin}
+                      block
+                      className="google-auth-button"
+                      style={{
+                        backgroundColor: '#4285f4',
+                        borderColor: '#4285f4',
+                        color: 'white'
+                      }}
+                    >
+                      Sign up with Google
                     </Button>
                   </Form.Item>
 

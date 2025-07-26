@@ -13,6 +13,7 @@ import HomeComponent from './components/layout/Home';
 import TrainGround from './components/train/trainGround';
 import RepairComponent from './components/layout/Repair';
 import AuthPage from './components/auth/AuthPage';
+import OAuth2Redirect from './components/auth/OAuth2Redirect';
 import Dashboard from './components/Dashboard';
 
 import 'antd-button-color/dist/css/style.css';
@@ -109,6 +110,7 @@ const AppContent = () => {
               <Navigate to="/auth" replace />
           } 
         />
+        <Route path="/auth/oauth2/redirect" element={<OAuth2Redirect />} />
         <Route path='*' element={<ErrorComponent />} />
       </Routes>
       <FooterComponent></FooterComponent>
