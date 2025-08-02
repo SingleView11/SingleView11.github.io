@@ -1,4 +1,5 @@
 import { Layout, } from 'antd';
+import VisitorStats from './VisitorStats';
 
 const { Footer } = Layout;
 
@@ -9,7 +10,10 @@ const FooterComponent = () => {
                 textAlign: 'center',
             }}
         >
-            Pitch Perfecter ©{new Date().getFullYear()} Created by Dirnot
+            <div>
+                Pitch Perfecter ©{new Date().getFullYear()} Created by Dirnot
+            </div>
+            <VisitorStats />
         </Footer>
     )
 }
