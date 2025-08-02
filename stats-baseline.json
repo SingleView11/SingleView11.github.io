@@ -1,0 +1,8 @@
+{
+  "historicalData": {
+    "pv": 20000,
+    "uv": 6000,
+    "lastUpdated": "2025-01-01",
+    "note": "Historical data from previous deployment before counter reset"
+  }
+}
