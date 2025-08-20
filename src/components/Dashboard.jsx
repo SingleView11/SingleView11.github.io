@@ -459,21 +459,27 @@ const Dashboard = () => {
               </Space>
             }
           >
-            {recentTraining.length > 0 ? (
-              <div style={{ height: '400px' }}>
-                <ReactECharts 
-                  option={getChartOptions()} 
-                  style={{ height: '100%', width: '100%' }}
-                  opts={{ renderer: 'canvas' }}
+            {(() => {
+              const chartOptions = getChartOptions();
+              return chartOptions ? (
+                <div style={{ height: '400px' }}>
+                  <ReactECharts 
+                    option={chartOptions} 
+                    style={{ height: '100%', width: '100%' }}
+                    opts={{ renderer: 'canvas' }}
+                  />
+                </div>
+              ) : (
+                <Empty 
+                  description={recentTraining.length > 0 ? 
+                    "No data in selected time range" : 
+                    "No training data available for chart"
+                  }
+                  image={Empty.PRESENTED_IMAGE_SIMPLE}
+                  style={{ padding: '60px 0' }}
                 />
-              </div>
-            ) : (
-              <Empty 
-                description="No training data available for chart"
-                image={Empty.PRESENTED_IMAGE_SIMPLE}
-                style={{ padding: '60px 0' }}
-              />
-            )}
+              );
+            })()}
           </Card>
         </Col>
       </Row>
