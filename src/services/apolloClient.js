@@ -4,7 +4,7 @@ import { authService } from './authService';
 
 // HTTP link to your GraphQL endpoint - use environment variables
 const httpLink = createHttpLink({
-  uri: 'https://dirnot.homes/graphql'  // Always use /api/graphql path in production
+  uri: 'https://dirnot.xyz/graphql'  // Always use /api/graphql path in production
     
 });
 
